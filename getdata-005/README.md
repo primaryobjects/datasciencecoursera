@@ -16,7 +16,7 @@ The program produces the following two files: meanStd.csv and tidy.csv.
 
 ### meanStd.csv
 
-Contains the merged set of train and test data, extracting only features relating to *mean* and *standard deviation*. Each row is labeled with an activity name. Each column is labeled with a feature name, sourced from *UCI HAR Dataset/features.txt*.
+Contains the merged set of train and test data, extracting only features relating to *mean* and *standard deviation*. Each row is labelled with a descriptive activity name. Each column is labelled with a descriptive feature name, sourced from *UCI HAR Dataset/features.txt*.
 
 ### tidy.csv
 
@@ -26,5 +26,5 @@ The original data set contains 30 subjects and 6 activities. A row exists in the
 
 ## Features
 
-See CodeBook.md for details on data contents and labels.
+See [CodeBook.md](https://github.com/primaryobjects/datasciencecoursera/blob/master/getdata-005/CodeBook.md) for details on data contents and labels.
 
