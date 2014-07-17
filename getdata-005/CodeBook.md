@@ -15,7 +15,25 @@ WALKING_DOWNSTAIRS
 WALKING_UPSTAIRS*
 
 ###Features
-Average (mean) floating point value calculated for each feature in the "Human Activity Recognition Using Smartphones" data set, across each activity and each subject. In the original data set, each subject has multiple measurements of activity for each feature. These measurements are averaged together to produce a single value for each feature/activity combination. *See /UCI HAR Dataset/features_info.txt*.   
+Average (mean) floating point value calculated for each feature in the "Human Activity Recognition Using Smartphones" data set, across each activity and each subject. In the original data set, each subject has multiple measurements of activity for each feature. These measurements are averaged together to produce a single value for each feature/activity combination. The abbreviations listed below are used within feature names. *See /UCI HAR Dataset/features_info.txt*.  
+- mean: Mean value
+- std: Standard deviation
+- mad: Median absolute deviation 
+- max: Largest value in array
+- min: Smallest value in array
+- sma: Signal magnitude area
+- energy: Energy measure. Sum of the squares divided by the number of values. 
+iqr: Interquartile range 
+- entropy: Signal entropy
+- arCoeff: Autorregresion coefficients with Burg order equal to 4
+- correlation: correlation coefficient between two signals
+- maxInds: index of the frequency component with largest magnitude
+- meanFreq: Weighted average of the frequency components to obtain a mean frequency
+- skewness: skewness of the frequency domain signal 
+- kurtosis: kurtosis of the frequency domain signal 
+- bandsEnergy: Energy of a frequency interval within the 64 bins of the FFT of each window.
+- angle: Angle between to vectors.
+  
 *tBodyAccMeanX  
 tBodyAccMeanY  
 tBodyAccMeanZ  
