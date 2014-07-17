@@ -1,5 +1,6 @@
-DATA DICTIONARY - Human Activity Recognition Using Smartphones Tidy Data Set
-====
+DATA DICTIONARY
+===
+## Tidy Data Set: Human Activity Recognition Using Smartphones
 
 > subject
 >> Numeric subject identifier
