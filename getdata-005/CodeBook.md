@@ -1,11 +1,11 @@
 DATA DICTIONARY - Human Activity Recognition Using Smartphones Tidy Data Set
 ====
 
-##subject
+###subject
 Numeric subject identifier  
 *1..30*
 
-##activity
+###activity
 Activity label  
 *LAYING  
 SITTING  
@@ -14,7 +14,7 @@ WALKING
 WALKING_DOWNSTAIRS  
 WALKING_UPSTAIRS*
 
-##Features
+###Features
 Average (mean) floating point value calculated for each feature in the "Human Activity Recognition Using Smartphones" data set, across each activity and each subject. In the original data set, each subject has multiple measurements of activity for each feature. These measurements are averaged together to produce a single value for each feature/activity combination. *See /UCI HAR Dataset/features_info.txt*.   
 *tBodyAccMeanX  
 tBodyAccMeanY  
