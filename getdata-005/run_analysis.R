@@ -111,7 +111,7 @@ createTidyData <- function(data) {
 }
 
 # Load train and test data into a single data set.
-data <- loadData(100)
+data <- loadData()
 
 # Get all columns relating to mean and standard deviation.
 meanStdData <- createMeanStdData(data)
