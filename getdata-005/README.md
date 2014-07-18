@@ -16,17 +16,17 @@ The program produces the following two files: meanStd.csv and tidy.csv.
 
 ### meanStd.csv
 
-Contains the merged set of train and test data, extracting only features relating to *mean* and *standard deviation*. Each row is labelled with a descriptive activity name. Each column is labelled with a descriptive feature name, sourced from *UCI HAR Dataset/features.txt*.
+Contains the merged set of train and test data, extracting only features relating to *mean* and *standard deviation* measurements (-mean() and -std() columns). Each row is labelled with a descriptive activity name. Each column is labelled with a descriptive feature name, sourced from *UCI HAR Dataset/features.txt*.
 
-This file contains the dimensions 10299x87, consisting of 10,299 rows (train and test rows merged together) and 87 columns (86 features related to mean and standard deviation + activity).
+This file contains the dimensions 10299x68, consisting of 10,299 rows (train and test rows merged together) and 68 columns (66 features related to (33) mean and (33) standard deviation + activity + subject).
 
 ### tidy.csv
 
-Contains a tidy data set from the merged set of train and test data. The tidy data set contains the average of each feature for each activity and each subject. Data is displayed in a *wide* table format, with each column including a specific feature, and each row including a subject/activity combination.
+Contains a tidy data set from the merged set of train and test data. The tidy data set contains the average of each feature from meanStd.csv for each activity and each subject. Data is displayed in a *wide* table format, with each column including a specific feature, and each row including a subject/activity combination.
 
 The original data set contains 30 subjects and 6 activities. A row exists in the tidy data set for each subject's activity. This results in 6 rows per subject, displaying the average (mean) value for each feature.
 
-This file contains the dimensions 180x563, consisting of 180 rows (30 * 6 = subjects * activities) and 563 columns (561 features + subject + activity).
+This file contains the dimensions 180x68, consisting of 180 rows (30 * 6 = subjects * activities) and 68 columns (66 features + subject + activity).
 
 ## Features
 

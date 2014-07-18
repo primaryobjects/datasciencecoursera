@@ -11,6 +11,7 @@ loadData <- function(nrows = 9999) {
     labels <- gsub("[^a-zA-Z0-9]", "", labels)
     labels <- gsub("mean", "Mean", labels)
     labels <- gsub("std", "Std", labels)
+    labels <- gsub("BodyBody", "Body", labels)
     
     # Read activity labels.
     activityLabels <- read.table("UCI HAR Dataset/activity_labels.txt", header = FALSE, col.names = c("activityCode", "activityLabel"), stringsAsFactors = FALSE)
@@ -62,8 +63,17 @@ loadData <- function(nrows = 9999) {
 #
 createMeanStdData <- function(data) {
     # Remove all columns except for activity, mean, and standard deviations.
-    data <- data[, grep("activity|[Mm]ean|[Ss]td", names(data))]
+    data <- data[, grep("subject|activity|Mean|Std", names(data))]
 
+    # Find names of angle columns to remove, as these include a mean or std value in the calculation, but are not mean nor std measurements by themselves.
+    removeColumns <- names(data[, grep("angle", names(data))])
+    
+    # Find names of Freq columns to remove, as these include a mean or std value in the calculation, but are not mean nor std measurements by themselves.
+    removeColumns <- c(removeColumns, names(data[, grep("Freq", names(data))]))
+
+    # Remove columns.
+    data <- data[ , -which(names(data) %in% removeColumns)]
+    
     # Return result.
     data
 }
@@ -91,7 +101,7 @@ createTidyData <- function(data) {
             
             # Iterate over each column by index. This way we can access the column names as well as the data.
             lapply(seq_along(subjectActivityGroup), function(i) {
-                if (i < 562) {
+                if (i < 67) {
                     # This is a feature column, so calculate the mean for this subject/activity and set the value in the cell.
                     row[1, names(subjectActivityGroup[i])] <<- mean(subjectActivityGroup[[i]])
                 }
@@ -117,7 +127,7 @@ data <- loadData()
 meanStdData <- createMeanStdData(data)
 
 # Create a tidy data set with the average of each variable for each activity and each subject.
-tidyData <- createTidyData(data)
+tidyData <- createTidyData(meanStdData)
 
 # Write output file 1.
 write.csv(meanStdData, "meanStd.csv", quote=FALSE, row.names=FALSE)
