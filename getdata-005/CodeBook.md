@@ -102,3 +102,6 @@ Gyro: Gyroscope measurement
 Mag: Magnitude of these three-dimensional signals, calculated using the Euclidean norm*  
 
 Refer to /UCI HAR Dataset/features_info.txt for descriptions of each feature.
+
+Author
+Kory Becker http://www.primaryobjects.com/kory-becker.aspx

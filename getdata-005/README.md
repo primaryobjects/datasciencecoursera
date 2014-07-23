@@ -32,3 +32,6 @@ This file contains the dimensions 180x68, consisting of 180 rows (30 * 6 = subje
 
 See [CodeBook.md](https://github.com/primaryobjects/datasciencecoursera/blob/master/getdata-005/CodeBook.md) for details on data contents and labels.
 
+## Author
+
+Kory Becker http://www.primaryobjects.com/kory-becker.aspx
