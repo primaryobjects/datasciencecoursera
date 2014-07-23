@@ -9,7 +9,7 @@ Download the [data set](http://archive.ics.uci.edu/ml/machine-learning-databases
 
     R run_analysis.R
 
-The program produces the following two files: meanStd.csv and tidy.csv.
+The program produces the following two files: [meanStd.csv](https://raw.githubusercontent.com/primaryobjects/datasciencecoursera/master/getdata-005/meanStd.csv) and [tidy.csv](https://github.com/primaryobjects/datasciencecoursera/blob/master/getdata-005/tidy.csv).
 
 ## Output
 
