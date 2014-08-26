@@ -1,6 +1,6 @@
 ## Exploratory Data Analysis - Project 2
 
-The following analysis graphs plot data from the [National Emissions Inventory (NEI)](http://www.epa.gov/ttn/chief/eiinformation.html) database.
+The following charts plot data from the [National Emissions Inventory (NEI)](http://www.epa.gov/ttn/chief/eiinformation.html) database.
 
 For each year and for each type of PM source, the NEI records how many tons of PM2.5 were emitted from that source over the course of the entire year. The data that you will use for this assignment are for 1999, 2002, 2005, and 2008.
 
