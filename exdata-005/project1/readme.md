@@ -14,13 +14,13 @@ one household with a one-minute sampling rate over a period of almost
 are available.
 
 ### Plot 1
-[Plot 1 - Global active power](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot1.png) 
+![Plot 1 - Global active power](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot1.png) 
 
 ### Plot 2
-[Plot 2 - Global active power kilowatts](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot2.png) 
+![Plot 2 - Global active power kilowatts](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot2.png) 
 
 ### Plot 3
-[Plot 3 - Energy sub metering](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot3.png) 
+![Plot 3 - Energy sub metering](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot3.png) 
 
 ### Plot 4
-[Plot 4 - Combination plotting](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot4.png) 
+![Plot 4 - Combination plotting](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot4.png) 
