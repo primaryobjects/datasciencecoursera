@@ -1,17 +1,12 @@
 ## Exploratory Data Analysis - Project 1
 
-This assignment uses data from
-the <a href="http://archive.ics.uci.edu/ml/">UC Irvine Machine
-Learning Repository</a>, a popular repository for machine learning
-datasets. In particular, the data originates from the "Individual household
-electric power consumption Data Set".
+The following charts plot data from the "Individual household
+electric power consumption Data Set", hosted by the <a href="http://archive.ics.uci.edu/ml/">UC Irvine Machine
+Learning Repository</a>.
 
 * <b>Dataset</b>: <a href="https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip">Electric power consumption</a> [20Mb]
 
-* <b>Description</b>: Measurements of electric power consumption in
-one household with a one-minute sampling rate over a period of almost
-4 years. Different electrical quantities and some sub-metering values
-are available.
+* <b>Description</b>: Measurements of electric power consumption in one household with a one-minute sampling rate over a period of 4 years. Different electrical quantities and sub-metering values are available.
 
 ### Plot 1
 ![Plot 1 - Global active power](https://github.com/primaryobjects/datasciencecoursera/blob/master/exdata-005/project1/plot1.png) 
