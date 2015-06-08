@@ -3,11 +3,15 @@ via Coursera
 
 This repository contains projects from the Coursera - Johns Hopkins University data science tracks. The following projects are included:
 
+- R Programming
 - Getting and Cleaning Data
 - Exploratory Data Analysis
 - Reproducible Research
 
 ## Projects
+
+#### R Programming
+[Cache Matrix](https://github.com/primaryobjects/cachematrix)
 
 #### Getting and Cleaning Data
 
@@ -21,8 +25,8 @@ Project 2 - [National Emissions Inventory (NEI)](https://github.com/primaryobjec
 
 #### Reproducible Research
 
-Project 1 -   
-Project 2 - 
+Project 1 - [Personal Activity Monitoring Device Analysis (Fitbit)](https://github.com/primaryobjects/datasciencecoursera/tree/master/repdata-015/project1)  
+Project 2 - [U.S. National Oceanic and Atmospheric Administration's (NOAA) Storm Database](https://github.com/primaryobjects/datasciencecoursera/tree/master/repdata-015/project2)
 
 ## Author
 
