@@ -88,8 +88,14 @@ library(gridExtra)</code></pre>
 <div id="loading-and-preprocessing-the-data." class="section level2">
 <h2>Loading and preprocessing the data.</h2>
 <p>The first step in our data analysis is to load the recorded data from a csv file. As the csv file is zipped, we’ll need to first unzip the file, extract the csv, and finally read the data into memory. We’ll also remove rows with missing data, as shown in the following code:</p>
-<pre class="r"><code># Read csv file.
-data &lt;- read.csv(unz(&quot;activity.zip&quot;, &quot;activity.csv&quot;))
+<pre class="r"><code># Download dataset, if it does not exist.
+fileName &lt;- 'activity.zip';
+if (!file.exists(fileName)) {
+  download.file('https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip', fileName, method=&quot;auto&quot;)
+}
+
+# Read csv file.
+data &lt;- read.csv(unz(fileName, &quot;activity.csv&quot;))
 
 # Remove fields with missing data.
 data2 &lt;- data[!is.na(data$steps),]</code></pre>

@@ -38,8 +38,14 @@ The first step in our data analysis is to load the recorded data from a csv file
 
 
 ```r
+# Download dataset, if it does not exist.
+fileName <- 'activity.zip';
+if (!file.exists(fileName)) {
+  download.file('https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip', fileName, method="auto")
+}
+
 # Read csv file.
-data <- read.csv(unz("activity.zip", "activity.csv"))
+data <- read.csv(unz(fileName, "activity.csv"))
 
 # Remove fields with missing data.
 data2 <- data[!is.na(data$steps),]
