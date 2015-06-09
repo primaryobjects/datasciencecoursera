@@ -8,6 +8,69 @@ library(ggplot2)
 library(reshape2)
 library(ggthemes)
 
+multiplyDamage <- function(value, multiplier) {
+  # Function for calculating true property/crop damage by factoring in multiplier. Example: 1.5 M => 1500000.
+  result <- NULL
+  
+  multiplier <- toupper(multiplier)
+  
+  if (multiplier == 'K') {
+    result <- value * 1000
+  }
+  else if (multiplier == 'M') {
+    result <- value * 1000000
+  }
+  else if (multiplier == 'B') {
+    result <- value * 1000000000
+  }
+  else {
+    result <- value
+  }
+  
+  result
+}
+
+orderGroupsByEvent <- function(data, groupColumnName1, groupColumnName2) {
+  # Transforms a data.frame into a sorted data.frame, grouped by Event Type (where event types will appear in order). Useful for plotting charts of top 10 event types.
+
+  # Transform data into long-style, for usage with stacked bar chart (injuries + fatalities).
+  p <- melt(data, id.vars = 'Event')
+  p <- p[p$variable != 'Total',]
+  p <- p[order(p$value, decreasing = TRUE), ]
+  
+  # Split into groups by event name, to allow sorting by event type in order by total count.
+  p1 <- split(p, p$Event)
+  
+  # Reshape the groups to include Index, Event, Total.
+  p2 <- sapply(seq_along(p1), function(t) {
+    c(Index = t, Event = names(p1[t]), Total = sum(p1[[t]]$value))
+  })
+  
+  # Sort the groups by total in descending order.
+  p3 <- p2[, order(as.numeric(p2['Total',]), decreasing=TRUE)]
+  
+  # Create a new data.frame with the groups as rows (grouped together by event name) in descending order by total count.
+  p4 <- data.frame(Event = character(), variable = character(), Total = numeric())
+  
+  # Loop through set and append rows of groups. This allows us to plot a bar chart in histogram form.
+  for (i in 1:ncol(p3)) {
+    row <- p3[, i]
+    
+    originalRow <- p[p$Event == p3[, i]['Event'],]
+    
+    newRow1 <- data.frame(Event = row[['Event']], variable = groupColumnName1, Total = originalRow[originalRow$variable == groupColumnName1,]['value'])
+    names(newRow1) <- c('Event', 'variable', 'Total')
+    
+    newRow2 <- data.frame(Event = row[['Event']], variable = groupColumnName2, Total = originalRow[originalRow$variable == groupColumnName2,]['value'])
+    names(newRow2) <- c('Event', 'variable', 'Total')
+    
+    p4 <- rbind(p4, newRow2)
+    p4 <- rbind(p4, newRow1)
+  }
+  
+  p4
+}
+
 # Download dataset, if it does not exist.
 fileName <- 'repdata-data-StormData.csv.bz2';
 if (!file.exists(fileName)) {
@@ -106,41 +169,11 @@ injuries <- aggregate(INJURIES ~ EVTYPE, data, FUN=sum)
 # Create a tidy dataset of just the Event Type, Number of Fatalaties, Number of Injuries, and total number of fatalities + injuries.
 personalHarm <- data.frame(Event = fatalities$EVTYPE, Fatalities = fatalities$FATALITIES, Injuries = injuries$INJURIES, Total = fatalities$FATALITIES + injuries$INJURIES)
 
-# Transform data into long-style, for usage with stacked bar chart (injuries + fatalities).
-p <- melt(personalHarm, id.vars = "Event")
-p <- p[p$variable != 'Total',]
-p <- p[order(p$value, decreasing = TRUE), ]
-
-# Split into groups by event name, to allow sorting by event type in order by total count.
-p1 <- split(p, p$Event)
-# Reshape the groups to include Index, Event, Total.
-p2 <- sapply(seq_along(p1), function(t) {
-  c(Index = t, Event = names(p1[t]), Total = sum(p1[[t]]$value))
-})
-# Sort the groups by total in descending order.
-p3 <- p2[, order(as.numeric(p2['Total',]), decreasing=TRUE)]
-
-# Create a new data.frame with the groups as rows (grouped together by event name) in descending order by total count.
-p4 <- data.frame(Event = character(), variable = character(), Total = numeric())
-
-# Loop through set and append rows of groups. This allows us to plot a bar chart in histogram form.
-for (i in 1:ncol(p3)) {
-  row <- p3[, i]
-  
-  originalRow <- p[p$Event == p3[, i]['Event'],]
-  
-  newRow1 <- data.frame(Event = row[['Event']], variable = 'Fatalities', Total = originalRow[originalRow$variable == 'Fatalities',]['value'])
-  names(newRow1) <- c('Event', 'variable', 'Total')
-  
-  newRow2 <- data.frame(Event = row[['Event']], variable = 'Injuries', Total = originalRow[originalRow$variable == 'Injuries',]['value'])
-  names(newRow2) <- c('Event', 'variable', 'Total')
-  
-  p4 <<- rbind(p4, newRow2)
-  p4 <<- rbind(p4, newRow1)
-}
+# Sort dataset by Total, grouped by event type.
+personalHarmSorted <- orderGroupsByEvent(personalHarm, 'Fatalities', 'Injuries')
 
 # Draw bar chart.
-g <- ggplot(p4[1:20,], aes(x = Event, y = Total, fill = variable))
+g <- ggplot(personalHarmSorted[1:20,], aes(x = Event, y = Total, fill = variable))
 g <- g + geom_bar(alpha=I(.9), stat='identity')
 g <- g + ggtitle('Personal Harm by Event')
 g <- g + theme_bw()
@@ -163,10 +196,14 @@ fatalitiesByDecade <- aggregate(FATALITIES ~ EVTYPE + decade, data, FUN=sum)
 # Calculate the total injuries per event type.
 injuriesByDecade <- aggregate(INJURIES ~ EVTYPE + decade, data, FUN=sum)
 
+# Create a tidy dataset of fatalities, injuries, and total by decade.
 personalHarmByDecade <- data.frame(Event = fatalitiesByDecade$EVTYPE, Fatalities = fatalitiesByDecade$FATALITIES, Injuries = injuriesByDecade$INJURIES, Decade = fatalitiesByDecade$decade, Total = fatalitiesByDecade$FATALITIES + injuriesByDecade$INJURIES)
 
+# Sort the tidy dataset by total count.
+personalHarmByDecadeSorted <- personalHarmByDecade[order(personalHarmByDecade$Total, decreasing = TRUE),]
+
 # Filter list to only those with top 10 highest total count, from previous chart.
-personalHarmByDecadeTop <- personalHarmByDecade[personalHarmByDecade$Event %in% p[1:10, 'Event'],]
+personalHarmByDecadeTop <- personalHarmByDecade[personalHarmByDecade$Event %in% personalHarmByDecadeSorted[1:20, 'Event'],]
 
 # Draw time-series chart of fatalities + injuries by decade.
 g <- ggplot(personalHarmByDecadeTop, aes(x = Decade, y = Total))
@@ -182,28 +219,6 @@ g <- g + scale_colour_colorblind()
 
 print(g)
 
-# Function for calculating true damage by factoring in multiplier.
-multiplyDamage <- function(value, multiplier) {
-  result <- NULL
-  
-  multiplier <- toupper(multiplier)
-
-  if (multiplier == 'K') {
-    result <- value * 1000
-  }
-  else if (multiplier == 'M') {
-    result <- value * 1000000
-  }
-  else if (multiplier == 'B') {
-    result <- value * 1000000000
-  }
-  else {
-    result <- value
-  }
-  
-  result
-}
-
 # Calculate the property damage by multiplying PROPDMG by PROPDMGEXP.
 propertyDamage <- aggregate(multiplyDamage(PROPDMG, PROPDMGEXP) ~ EVTYPE, data, FUN=sum)
 names(propertyDamage)[2] <- 'Cost'
@@ -218,52 +233,11 @@ damages <- data.frame(Event = propertyDamage$EVTYPE, Property = propertyDamage$C
 # Sort by total count in decreasing order.
 damages <- damages[order(damages$Total, decreasing = TRUE),]
 
-# Draw bar chart.
-#g <- ggplot(damages[1:20,], aes(x = Event, y = Total))
-#g <- g + geom_bar(alpha=I(.9), stat='identity')
-#g <- g + ggtitle('Damages by Event')
-#g <- g + theme_bw()
-#g <- g + theme(plot.title = element_text(size=20, face="bold", vjust=2), axis.text.x = element_text(angle = 45, hjust = 1))
-#g <- g + xlab('Event')
-#g <- g + ylab('Total Property and Crop Damage')
-
-#print(g)
-
-# Transform data into long-style, for usage with stacked bar chart (property + crop).
-p <- melt(damages, id.vars = "Event")
-p <- p[p$variable != 'Total',]
-p <- p[order(p$value, decreasing = TRUE), ]
-
-# Split into groups by event name, to allow sorting by event type in order by total count.
-p1 <- split(p, p$Event)
-# Reshape the groups to include Index, Event, Total.
-p2 <- sapply(seq_along(p1), function(t) {
-  c(Index = t, Event = names(p1[t]), Total = sum(p1[[t]]$value))
-})
-# Sort the groups by total in descending order.
-p3 <- p2[,order(as.numeric(p2['Total',]), decreasing=TRUE)]
-
-# Create a new data.frame with the groups as rows (grouped together by event name) in descending order by total count.
-p4 <- data.frame(Event = character(), variable = character(), Total = numeric())
-
-# Loop through set and append rows of groups. This allows us to plot a bar chart in histogram form.
-for (i in 1:ncol(p3)) {
-  row <- p3[, i]
-  
-  originalRow <- p[p$Event == p3[, i]['Event'],]
-
-  newRow1 <- data.frame(Event = row[['Event']], variable = 'Property', Total = originalRow[originalRow$variable == 'Property',]['value'])
-  names(newRow1) <- c('Event', 'variable', 'Total')
-
-  newRow2 <- data.frame(Event = row[['Event']], variable = 'Crop', Total = originalRow[originalRow$variable == 'Crop',]['value'])
-  names(newRow2) <- c('Event', 'variable', 'Total')
-  
-  p4 <<- rbind(p4, newRow1)
-  p4 <<- rbind(p4, newRow2)
-}
+# Sort dataset by Total, grouped by event type.
+damagesSorted <- orderGroupsByEvent(damages, 'Property', 'Crop')
 
 # Draw bar chart.
-g <- ggplot(p4[1:20,], aes(x = Event, y = Total)) #, fill = variable (omit since crop damage is too small compared to property)
+g <- ggplot(damagesSorted[1:20,], aes(x = Event, y = Total)) #, fill = variable (omit since crop damage is too small compared to property)
 g <- g + geom_bar(alpha=I(.9), stat='identity')
 g <- g + ggtitle('Damages by Event')
 g <- g + theme_bw()
