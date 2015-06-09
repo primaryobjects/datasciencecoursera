@@ -8,8 +8,14 @@ library(ggplot2)
 library(reshape2)
 library(ggthemes)
 
-# Read csv file. Source: https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2
-data <- read.csv("repdata-data-StormData.csv.bz2")
+# Download dataset, if it does not exist.
+fileName <- 'repdata-data-StormData.csv.bz2';
+if (!file.exists(fileName)) {
+  download.file('https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2', fileName, method="auto")
+}
+
+# Read csv file.
+data <- read.csv(fileName)
 
 # EVTYPE contains many variations of the same event name.
 # Convert to all upper-case.
