@@ -84,6 +84,16 @@ data <- read.csv(fileName)
 # Convert to all upper-case.
 data$EVTYPE <- toupper(data$EVTYPE)
 
+# Add a date column by parsing the BGN_DATE field and converting to a date type.
+dateFormat <- "%m/%d/%Y %H:%M:%S"
+data$date <- as.Date(data$BGN_DATE, dateFormat)
+
+# Add a year column
+data$year <- format(data$date, '%Y')
+
+# Add a decade column by rounding the year down to the nearest 10.
+data$decade <- floor(as.numeric(format(data$date, "%Y")) / 10) * 10
+
 # Remove event types containing: SUMMARY, TEMPERATURE RECORD.
 data <- data[!grepl("SUMMARY", data$EVTYPE), ]
 data <- data[!grepl("TEMPERATURE RECORD", data$EVTYPE), ]
@@ -120,6 +130,7 @@ data$EVTYPE <- gsub('[ ]{2,}', ' ', data$EVTYPE)
 
 # Rename abbreviations: SML=>SMALL, FLDG=>FLOOD, FLOODING=>FLOOD, FLOODS => FLOOD, FLOODIN => FLOOD, FLD=>FLOOD, WARMTH=>WARM, COOL=>COLD, WND=>WIND, FIRES=>FIRE, WILD FIRES=>WILDFIRE, WILDFIRES=>WILDFIRE, VOG=>FOG
 data$EVTYPE <- gsub('SML', 'SMALL', data$EVTYPE)
+data$EVTYPE <- gsub('HURRICANE.*', 'HURRICANE', data$EVTYPE)
 data$EVTYPE <- gsub('FLDG|FLOODING|FLOODS|FLOODIN|FLD', 'FLOOD', data$EVTYPE)
 data$EVTYPE <- gsub('.+FLOOD.*', 'FLOOD', data$EVTYPE)
 data$EVTYPE <- gsub('WARMTH', 'WARM', data$EVTYPE)
@@ -142,7 +153,6 @@ data$EVTYPE <- gsub('MUDSLIDE.*|MUD SLIDE.*|MUD ROCK.*', 'MUDSLIDE', data$EVTYPE
 data$EVTYPE <- gsub('MARINE.+', 'MARINE', data$EVTYPE)
 data$EVTYPE <- gsub('LIGHTNING.+', 'LIGHTNING', data$EVTYPE)
 data$EVTYPE <- gsub('ICE.+|ICY.+|GLAZE.*|BLACK ICE', 'ICE', data$EVTYPE)
-data$EVTYPE <- gsub('HURRICANE.*', 'HURRICANE', data$EVTYPE)
 data$EVTYPE <- gsub('HOT.*|HEAT.*|WARM.*', 'HEAT', data$EVTYPE)
 data$EVTYPE <- gsub('TORNADO.*', 'TORNADO', data$EVTYPE)
 data$EVTYPE <- gsub('DRY.*', 'DRY', data$EVTYPE)
@@ -160,11 +170,14 @@ data$EVTYPE <- factor(data$EVTYPE)
 # Display the unique event types.
 levels(data$EVTYPE)
 
+# Filter the dataset to records starting at 1993 and later (due to missing data in prior years, which would skew results towards Tornado and Thunderstorm being over-represented while calculating total numbers across years).
+data1993 <- data[data$year >= 1993,]
+
 # Calculate the total fatalities per event type.
-fatalities <- aggregate(FATALITIES ~ EVTYPE, data, FUN=sum)
+fatalities <- aggregate(FATALITIES ~ EVTYPE, data1993, FUN=sum)
 
 # Calculate the total injuries per event type.
-injuries <- aggregate(INJURIES ~ EVTYPE, data, FUN=sum)
+injuries <- aggregate(INJURIES ~ EVTYPE, data1993, FUN=sum)
 
 # Create a tidy dataset of just the Event Type, Number of Fatalaties, Number of Injuries, and total number of fatalities + injuries.
 personalHarm <- data.frame(Event = fatalities$EVTYPE, Fatalities = fatalities$FATALITIES, Injuries = injuries$INJURIES, Total = fatalities$FATALITIES + injuries$INJURIES)
@@ -175,20 +188,14 @@ personalHarmSorted <- orderGroupsByEvent(personalHarm, 'Fatalities', 'Injuries')
 # Draw bar chart.
 g <- ggplot(personalHarmSorted[1:20,], aes(x = Event, y = Total, fill = variable))
 g <- g + geom_bar(alpha=I(.9), stat='identity')
-g <- g + ggtitle('Personal Harm by Event')
+g <- g + ggtitle('Personal Harm by Event from 1993 to 2011')
 g <- g + theme_bw()
 g <- g + theme(plot.title = element_text(size=20, face="bold", vjust=2), axis.text.x = element_text(angle = 45, hjust = 1))
 g <- g + xlab('Event')
 g <- g + ylab('Total Fatalities and Injuries')
+g <- g + scale_fill_manual(values=c('#303030', 'red'))
 
 print(g)
-
-# Add a date column by parsing the BGN_DATE field and converting to a date type.
-dateFormat <- "%m/%d/%Y %H:%M:%S"
-data$date <- as.Date(data$BGN_DATE, dateFormat)
-
-# Add a decade column by rounding the year down to the nearest 10.
-data$decade <- floor(as.numeric(format(data$date, "%Y")) / 10) * 10
 
 # Calculate the total fatalities per event type and per decade.
 fatalitiesByDecade <- aggregate(FATALITIES ~ EVTYPE + decade, data, FUN=sum)
@@ -220,11 +227,11 @@ g <- g + scale_colour_colorblind()
 print(g)
 
 # Calculate the property damage by multiplying PROPDMG by PROPDMGEXP.
-propertyDamage <- aggregate(multiplyDamage(PROPDMG, PROPDMGEXP) ~ EVTYPE, data, FUN=sum)
+propertyDamage <- aggregate(multiplyDamage(PROPDMG, PROPDMGEXP) ~ EVTYPE, data1993, FUN=sum)
 names(propertyDamage)[2] <- 'Cost'
 
 # Calculate the crop damage by multiplying CROPDMG by CROPDMGEXP.
-cropDamage <- aggregate(multiplyDamage(CROPDMG, CROPDMGEXP) ~ EVTYPE, data, FUN=sum)
+cropDamage <- aggregate(multiplyDamage(CROPDMG, CROPDMGEXP) ~ EVTYPE, data1993, FUN=sum)
 names(cropDamage)[2] <- 'Cost'
 
 # Create a tidy dataset of just the Event Type, Property Damage, Crop Damage, and total property + crop damage.
@@ -239,7 +246,7 @@ damagesSorted <- orderGroupsByEvent(damages, 'Property', 'Crop')
 # Draw bar chart.
 g <- ggplot(damagesSorted[1:20,], aes(x = Event, y = Total)) #, fill = variable (omit since crop damage is too small compared to property)
 g <- g + geom_bar(alpha=I(.9), stat='identity')
-g <- g + ggtitle('Damages by Event')
+g <- g + ggtitle('Damages by Event from 1993 to 2011')
 g <- g + theme_bw()
 g <- g + theme(plot.title = element_text(size=20, face="bold", vjust=2), axis.text.x = element_text(angle = 45, hjust = 1))
 g <- g + xlab('Event')
