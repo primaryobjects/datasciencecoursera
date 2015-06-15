@@ -1,14 +1,11 @@
 ---
-title: "Reproducible Research: Peer Assessment 2"
+title: "Analysis of the Most Harmful Weather Events and Their Economic Impact From 1993 to 2011"
 output: 
   html_document:
     keep_md: true
 ---
 
-An Analysis of the Most Harmful Weather Events and Economic Impact From 1993 to 2011
----
-
-Kory Becker - June 15, 2015
+#### Kory Becker - June 15, 2015
 
 ## Synopsis
 
@@ -110,7 +107,7 @@ Plural terms are resolved to their singular form. For example, "FLOODING" and "F
 
 The following code sample shows the cleaning process in detail, including a final list of the unique event types.
 
-```{r}
+```{r cache=TRUE}
 # Download dataset, if it does not exist.
 fileName <- 'repdata-data-StormData.csv.bz2';
 if (!file.exists(fileName)) {
@@ -208,14 +205,14 @@ data$EVTYPE <- gsub('^\\s+|\\s+$', '', data$EVTYPE)
 data$EVTYPE <- factor(data$EVTYPE)
 
 # Display the unique event types.
-levels(data$EVTYPE)
+# levels(data$EVTYPE)
 ```
 
 ## Results
 
 ### Across the United States, which types of events are most harmful with respect to population health?
 
-The top most harmful weather events to the population are determined by first, filtering the data to the timeframe of 1993 to 2011. This is done to eliminate incomplete data in prior years, which consists largely of tornado and thunderstorm data. Due to the recording of these weather events during those early years, the total results of the data (over all years) would be skewd in favor of these events. We therefore filter the years to the range where the majority of weather events were recorded.
+The top most harmful weather events to the population are determined by first, filtering the data to the timeframe of 1993 to 2011. This is done to eliminate incomplete data in prior years, which consists largely of tornado and thunderstorm data. Due to the recording of these weather events during those early years, the total results of the data (over all years) would be skewed in favor of these events. We therefore filter the years to the range where the majority of weather events were recorded.
 
 ```{r}
 # Filter the dataset to records starting at 1993 and later (due to missing data in prior years, which would skew results towards Tornado and Thunderstorm being over-represented while calculating total numbers across years).
@@ -246,9 +243,9 @@ g <- g + scale_fill_manual(values=c('#303030', 'red'))
 print(g)
 ```
 
-As shown in the above bar chart, the most harmful weather event for the population over the years of 1993 to 2011 included: Tornadoes, Heat, and Floods. Note, the chart includes the total sum of both injuries and fatalities over the time period.
+*The bar chart displays that the most harmful weather events for the population over the years of 1993 to 2011 include: Tornadoes, Heat, and Floods. The count for each event includes the total sum of both injuries and fatalities over the time period.*
 
-Tornadoes are, by far, the most harmful weather event to the population. Tornadoes are unpredictible, powerful, and can occur with little warning.
+As shown in the above chart, tornadoes are, by far, the most harmful weather event to the population. Tornadoes are unpredictible, powerful, and can occur with little warning.
 
 As the analysis shows, tornadoes have the highest injury count. However, "heat" results in the highest number of fatalities, as shown in the red bars.
 
@@ -287,7 +284,7 @@ g <- g + scale_colour_colorblind()
 print(g)
 ```
 
-The above time-series chart shows the top 8 most harmful events by decade. Notice, we include data from all available years. This is reflected in Tornado (purple) and Thunderstorm (orange) displaying values prior to 1990, while all other weather events begin at 1990.
+*This time-series chart shows the top 8 most harmful events by decade. Data is included from all available years. This is reflected in Tornado (purple) and Thunderstorm (orange) displaying values prior to 1990, while all other weather events begin at 1990.*
 
 As the time-series plot corroborates, tornadoes continue to be the most harmful of severe weather events, both in the past and current. There is a significant spike in tornado injury and fatalities during the 1960's, leading up to 1970. At this point, the count drops dramatically. This may be due to technological improvements in tornado warning systems and public protection. This trend continues downward, likely with the advent of computing technologies to aid in early detection.
 
@@ -295,9 +292,9 @@ Note, all of the harmful weather events included in the chart contain a downward
 
 ## Across the United States, which types of events have the greatest economic consequences?
 
-The severe weather events with the greatest economical impact can be determined by examining the property damage and crop damage totals for each event. We, again, filter from the years 1993 to 2011, in order to remove data that may skew the results. We then compute the sum of the property and crop damage for each event over time, as follows:
+The severe weather events with the greatest economic impact can be determined by examining the property damage and crop damage totals for each event. We, again, filter from the years 1993 to 2011, in order to remove data that may skew the results. We then compute the sum of the property and crop damage for each event over time, as follows:
 
-```{r}
+```{r warning=F}
 # Calculate the property damage by multiplying PROPDMG by PROPDMGEXP.
 propertyDamage <- aggregate(multiplyDamage(PROPDMG, PROPDMGEXP) ~ EVTYPE, data1993, FUN=sum)
 names(propertyDamage)[2] <- 'Cost'
@@ -327,12 +324,12 @@ g <- g + ylab('Total Property and Crop Damage')
 print(g)
 ```
 
-As shown in the above chart, Thunderstorms results in the highest economical impact. Thunderstorms can be widespread, frequent, and cause significant damages. Flooding is the second most severe weather event, and is often a result of thunderstorms, hurricanes, typhoons, and other severe rain events.
+*Thunderstorms result in the highest economical impact. Thunderstorms can be widespread, frequent, and cause significant damages. Flooding is the second most severe weather event, and is often a result of thunderstorms, hurricanes, typhoons, and other severe rain events.*
 
-Conclusion
+## Conclusion
 
 Through the analysis of the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, we've determined that the top most harmful weather events to the population, from the years 1993 to 2011, include tornadoes, heat, and floods.
 
-The weather events with the greatest economical impact to property and crop damage, include thunderstorms, flooding, and tornadoes.
+The weather events with the greatest economic impact to property and crop damage, include thunderstorms, flooding, and tornadoes.
 
 While several weather events continue to impact the population, the analysis shows that the general trend of these harmful weather events is on a downward slope over time. This offers a positive reflection to the future management of these severe weather events.
