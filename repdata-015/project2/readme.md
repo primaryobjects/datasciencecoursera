@@ -1,9 +1,6 @@
-# Reproducible Research: Peer Assessment 2
+# Analysis of the Most Harmful Weather Events and Their Economic Impact From 1993 to 2011
 
-An Analysis of the Most Harmful Weather Events and Economic Impact From 1993 to 2011
----
-
-Kory Becker - June 15, 2015
+#### Kory Becker - June 15, 2015
 
 ## Synopsis
 
@@ -206,111 +203,14 @@ data$EVTYPE <- gsub('^\\s+|\\s+$', '', data$EVTYPE)
 data$EVTYPE <- factor(data$EVTYPE)
 
 # Display the unique event types.
-levels(data$EVTYPE)
-```
-
-```
-##   [1] ""                           "AGRICULTURAL FREEZE"       
-##   [3] "APACHE COUNTY"              "ASTRONOMICAL HIGH TIDE"    
-##   [5] "ASTRONOMICAL LOW TIDE"      "AVALANCHE"                 
-##   [7] "BEACH EROSION"              "BELOW NORMAL PRECIPITATION"
-##   [9] "BITTER WIND"                "BLIZZARD"                  
-##  [11] "BLOW OUT TIDE"              "BLOW OUT TIDES"            
-##  [13] "BLOWING DUST"               "COASTAL EROSION"           
-##  [15] "COASTAL STORM"              "COASTAL SURGE"             
-##  [17] "COLD"                       "DAM BREAK"                 
-##  [19] "DAM FAILURE"                "DAMAGING FREEZE"           
-##  [21] "DOWNBURST"                  "DOWNBURST WIND"            
-##  [23] "DRIEST MONTH"               "DROUGHT"                   
-##  [25] "DROUGHT HEAT"               "DROWNING"                  
-##  [27] "DRY"                        "DUST DEVEL"                
-##  [29] "DUST DEVIL"                 "DUST DEVIL WATERSPOUT"     
-##  [31] "DUST STORM"                 "DUST STORM WIND"           
-##  [33] "DUSTSTORM"                  "ED RAIN"                   
-##  [35] "EXTENDED COLD"              "FIRE"                      
-##  [37] "FIRE WX"                    "FIRES"                     
-##  [39] "FLASH FLOOODING"            "FLOOD"                     
-##  [41] "FLOOD FLASH"                "FLOOD HEAVY RAIN"          
-##  [43] "FLOOD RAIN"                 "FLOOD WATCH"               
-##  [45] "FLOOD WIND"                 "FOG"                       
-##  [47] "FOG COLD"                   "FREEZE"                    
-##  [49] "FREEZING DRIZZLE"           "FREEZING DRIZZLE FREEZING" 
-##  [51] "FREEZING FOG"               "FREEZING RAIN"             
-##  [53] "FREEZING SPRAY"             "FROST"                     
-##  [55] "FROST FREEZE"               "FUNNEL"                    
-##  [57] "FUNNEL CLOUD"               "FUNNEL CLOUD HAIL"         
-##  [59] "FUNNEL CLOUDS"              "FUNNELS"                   
-##  [61] "GRADIENT WIND"              "GROUND BLIZZARD"           
-##  [63] "GUSTNADO"                   "GUSTY LAKE WIND"           
-##  [65] "GUSTY THUNDERSTORM"         "GUSTY WIND"                
-##  [67] "HAIL"                       "HARD FREEZE"               
-##  [69] "HAZARDOUS SURF"             "HEAT"                      
-##  [71] "HEAVY MIX"                  "HEAVY PRECIPATATION"       
-##  [73] "HEAVY PRECIPITATION"        "HEAVY RAIN"                
-##  [75] "HEAVY SEAS"                 "HEAVY SHOWER"              
-##  [77] "HEAVY SHOWERS"              "HEAVY SURF"                
-##  [79] "HEAVY SURF HIGH SURF"       "HEAVY SURF WIND"           
-##  [81] "HEAVY SWELLS"               "HEAVY WET"                 
-##  [83] "HIGH"                       "HIGH SEAS"                 
-##  [85] "HIGH SURF"                  "HIGH SURF ADVISORIES"      
-##  [87] "HIGH SURF ADVISORY"         "HIGH SWELLS"               
-##  [89] "HIGH TEMPERATURE"           "HIGH TEMPERATURES"         
-##  [91] "HIGH TIDES"                 "HIGH WATER"                
-##  [93] "HIGH WAVES"                 "HURRICANE"                 
-##  [95] "HVY RAIN"                   "HYPERTHERMIA"              
-##  [97] "HYPOTHERMIA"                "ICE"                       
-##  [99] "L SLIDE"                    "L SLIDES"                  
-## [101] "L SLUMP"                    "L SPOUT"                   
-## [103] "LARGE WALL CLOUD"           "LATE FREEZE"               
-## [105] "LATE SEASON HAIL"           "LIGHT FREEZING RAIN"       
-## [107] "LIGHTING"                   "LIGHTNING"                 
-## [109] "LIGNTNING"                  "LOCALLY HEAVY RAIN"        
-## [111] "LOW"                        "LOW RAIN"                  
-## [113] "LOW WIND"                   "LY DRY"                    
-## [115] "LY WET"                     "MARINE"                    
-## [117] "METRO STORM MAY"            "MICROBURST"                
-## [119] "MICROBURST WIND"            "MILD DRY"                  
-## [121] "MILD PATTERN"               "MIXED PRECIP"              
-## [123] "MIXED PRECIPITATION"        "MONTHLY PRECIPITATION"     
-## [125] "MONTHLY RAIN"               "MONTHLY TEMPERATURE"       
-## [127] "MUDSLIDE"                   "NO WEATHER"                
-## [129] "NON HAIL"                   "NON THUNDERSTORM"          
-## [131] "NON WIND"                   "NONE"                      
-## [133] "NORMAL PRECIPITATION"       "NORTHERN LIGHTS"           
-## [135] "OTHER"                      "PATCHY FOG"                
-## [137] "PATCHY ICE"                 "PRECIPITATION"             
-## [139] "RAIN"                       "RAPIDLY RISING WATER"      
-## [141] "RED FLAG CRITERIA"          "REMNANTS OF FLOYD"         
-## [143] "RIP CURRENT"                "ROCK SLIDE"                
-## [145] "ROGUE WAVE"                 "ROTATING WALL CLOUD"       
-## [147] "ROUGH SEAS"                 "ROUGH SURF"                
-## [149] "SAHARAN DUST"               "SEICHE"                    
-## [151] "SLEET"                      "SMALL HAIL"                
-## [153] "SMALL STREAM"               "SMOKE"                     
-## [155] "SNOW"                       "SOUTHEAST"                 
-## [157] "STORM SURGE"                "TEMPERATURE"               
-## [159] "TEMPERATURES"               "THUNDERSTORM"              
-## [161] "TORNADO"                    "TORNDAO"                   
-## [163] "TORRENTIAL RAIN"            "TROPICAL DEPRESSION"       
-## [165] "TROPICAL STORM"             "TSUNAMI"                   
-## [167] "TURBULENCE"                 "TYPHOON"                   
-## [169] "UNSEASONAL LOW TEMP"        "UNSEASONAL RAIN"           
-## [171] "UNUSUAL HEAT"               "UNUSUALLY COLD"            
-## [173] "UNUSUALLY HEAT"             "URBAN SMALL"               
-## [175] "URBAN SMALL STREAM"         "VERY DRY"                  
-## [177] "VERY HEAT"                  "VOLCANIC ASH"              
-## [179] "VOLCANIC ERUPTION"          "WAKE LOW WIND"             
-## [181] "WALL CLOUD"                 "WALL CLOUD FUNNEL CLOUD"   
-## [183] "WATERSPOUT"                 "WET"                       
-## [185] "WHIRLWIND"                  "WIND"                      
-## [187] "WINDCHILL"                  "WINDCHILL TEMPERATURES"
+# levels(data$EVTYPE)
 ```
 
 ## Results
 
 ### Across the United States, which types of events are most harmful with respect to population health?
 
-The top most harmful weather events to the population are determined by first, filtering the data to the timeframe of 1993 to 2011. This is done to eliminate incomplete data in prior years, which consists largely of tornado and thunderstorm data. Due to the recording of these weather events during those early years, the total results of the data (over all years) would be skewd in favor of these events. We therefore filter the years to the range where the majority of weather events were recorded.
+The top most harmful weather events to the population are determined by first, filtering the data to the timeframe of 1993 to 2011. This is done to eliminate incomplete data in prior years, which consists largely of tornado and thunderstorm data. Due to the recording of these weather events during those early years, the total results of the data (over all years) would be skewed in favor of these events. We therefore filter the years to the range where the majority of weather events were recorded.
 
 
 ```r
@@ -344,9 +244,9 @@ print(g)
 
 ![](stormdata_files/figure-html/unnamed-chunk-4-1.png) 
 
-As shown in the above bar chart, the most harmful weather event for the population over the years of 1993 to 2011 included: Tornadoes, Heat, and Floods. Note, the chart includes the total sum of both injuries and fatalities over the time period.
+*The bar chart displays that the most harmful weather events for the population over the years of 1993 to 2011 include: Tornadoes, Heat, and Floods. The count for each event includes the total sum of both injuries and fatalities over the time period.*
 
-Tornadoes are, by far, the most harmful weather event to the population. Tornadoes are unpredictible, powerful, and can occur with little warning.
+As shown in the above chart, tornadoes are, by far, the most harmful weather event to the population. Tornadoes are unpredictible, powerful, and can occur with little warning.
 
 As the analysis shows, tornadoes have the highest injury count. However, "heat" results in the highest number of fatalities, as shown in the red bars.
 
@@ -388,7 +288,7 @@ print(g)
 
 ![](stormdata_files/figure-html/unnamed-chunk-5-1.png) 
 
-The above time-series chart shows the top 8 most harmful events by decade. Notice, we include data from all available years. This is reflected in Tornado (purple) and Thunderstorm (orange) displaying values prior to 1990, while all other weather events begin at 1990.
+*This time-series chart shows the top 8 most harmful events by decade. Data is included from all available years. This is reflected in Tornado (purple) and Thunderstorm (orange) displaying values prior to 1990, while all other weather events begin at 1990.*
 
 As the time-series plot corroborates, tornadoes continue to be the most harmful of severe weather events, both in the past and current. There is a significant spike in tornado injury and fatalities during the 1960's, leading up to 1970. At this point, the count drops dramatically. This may be due to technological improvements in tornado warning systems and public protection. This trend continues downward, likely with the advent of computing technologies to aid in early detection.
 
@@ -396,52 +296,16 @@ Note, all of the harmful weather events included in the chart contain a downward
 
 ## Across the United States, which types of events have the greatest economic consequences?
 
-The severe weather events with the greatest economical impact can be determined by examining the property damage and crop damage totals for each event. We, again, filter from the years 1993 to 2011, in order to remove data that may skew the results. We then compute the sum of the property and crop damage for each event over time, as follows:
+The severe weather events with the greatest economic impact can be determined by examining the property damage and crop damage totals for each event. We, again, filter from the years 1993 to 2011, in order to remove data that may skew the results. We then compute the sum of the property and crop damage for each event over time, as follows:
 
 
 ```r
 # Calculate the property damage by multiplying PROPDMG by PROPDMGEXP.
 propertyDamage <- aggregate(multiplyDamage(PROPDMG, PROPDMGEXP) ~ EVTYPE, data1993, FUN=sum)
-```
-
-```
-## Warning in if (multiplier == "K") {: the condition has length > 1 and only
-## the first element will be used
-```
-
-```
-## Warning in if (multiplier == "M") {: the condition has length > 1 and only
-## the first element will be used
-```
-
-```
-## Warning in if (multiplier == "B") {: the condition has length > 1 and only
-## the first element will be used
-```
-
-```r
 names(propertyDamage)[2] <- 'Cost'
 
 # Calculate the crop damage by multiplying CROPDMG by CROPDMGEXP.
 cropDamage <- aggregate(multiplyDamage(CROPDMG, CROPDMGEXP) ~ EVTYPE, data1993, FUN=sum)
-```
-
-```
-## Warning in if (multiplier == "K") {: the condition has length > 1 and only
-## the first element will be used
-```
-
-```
-## Warning in if (multiplier == "M") {: the condition has length > 1 and only
-## the first element will be used
-```
-
-```
-## Warning in if (multiplier == "B") {: the condition has length > 1 and only
-## the first element will be used
-```
-
-```r
 names(cropDamage)[2] <- 'Cost'
 
 # Create a tidy dataset of just the Event Type, Property Damage, Crop Damage, and total property + crop damage.
@@ -467,12 +331,12 @@ print(g)
 
 ![](stormdata_files/figure-html/unnamed-chunk-6-1.png) 
 
-As shown in the above chart, Thunderstorms results in the highest economical impact. Thunderstorms can be widespread, frequent, and cause significant damages. Flooding is the second most severe weather event, and is often a result of thunderstorms, hurricanes, typhoons, and other severe rain events.
+*Thunderstorms result in the highest economical impact. Thunderstorms can be widespread, frequent, and cause significant damages. Flooding is the second most severe weather event, and is often a result of thunderstorms, hurricanes, typhoons, and other severe rain events.*
 
-Conclusion
+## Conclusion
 
 Through the analysis of the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, we've determined that the top most harmful weather events to the population, from the years 1993 to 2011, include tornadoes, heat, and floods.
 
-The weather events with the greatest economical impact to property and crop damage, include thunderstorms, flooding, and tornadoes.
+The weather events with the greatest economic impact to property and crop damage, include thunderstorms, flooding, and tornadoes.
 
 While several weather events continue to impact the population, the analysis shows that the general trend of these harmful weather events is on a downward slope over time. This offers a positive reflection to the future management of these severe weather events.
