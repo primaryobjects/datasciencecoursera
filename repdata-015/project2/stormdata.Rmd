@@ -1,13 +1,41 @@
+---
+title: "Reproducible Research: Peer Assessment 2"
+output: 
+  html_document:
+    keep_md: true
+---
+
+An Analysis of the Most Harmful Weather Events and Economic Impact From 1993 to 2011
+---
+
+Kory Becker - June 15, 2015
+
+## Synopsis
+
+Severe weather events can result in significant harm to both the population and the economy. This report analyzes the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, which contains thousands of weather events, recorded over the time period of 1950 to 2011. As a result of the analysis, it is determined that the top most harmful weather events, over the period of time, consists of tornadoes, heat waves, and flooding. It is also determined that weather events with the highest economical impact include thunderstorms, flooding, and tornadoes. Through the awareness of severe weather impact on the population and economy, we can have enhanced insight into protecting the public and increasing well-being. 
+
+
+## Data Processing
+
+The data source for this analysis is the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm [database](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2).
+
+Before loading the data, we include the following libraries for processing.
+
+```{r}
 ## Including the required R packages.
 packages <- c("ggplot2", "ggthemes", "reshape2")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))  
 }
-
+# 
 library(ggplot2)
 library(reshape2)
 library(ggthemes)
+```
 
+The following helper methods have also been created, to assist in processing the data.
+
+```{r}
 multiplyDamage <- function(value, multiplier) {
   # Function for calculating true property/crop damage by factoring in multiplier. Example: 1.5 M => 1500000.
   result <- NULL
@@ -70,11 +98,23 @@ orderGroupsByEvent <- function(data, groupColumnName1, groupColumnName2) {
   
   p4
 }
+```
 
+### Downloading and Cleaning the Data
+
+The data is downloaded directly from the source and loaded into memory. Once complete, we begin filtering the data to clean event types and assign each weather event into a designated category.
+
+Simple regular expressions are used to clean event types. In general, we remove adjectives, such as "UNSEASONABLE", "EXTREME", "DEEP", and similar descriptive words. This allows us to filter down to the core weather event category.
+
+Plural terms are resolved to their singular form. For example, "FLOODING" and "FLOODS" are both converted to simply "FLOOD". Similarly, "HOT", "HEAT", "WARM" are converted to "HEAT".
+
+The following code sample shows the cleaning process in detail, including a final list of the unique event types.
+
+```{r}
 # Download dataset, if it does not exist.
 fileName <- 'repdata-data-StormData.csv.bz2';
 if (!file.exists(fileName)) {
-  download.file('https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2', fileName, method="auto")
+  download.file('https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2', fileName, method="curl")
 }
 
 # Read csv file.
@@ -169,7 +209,15 @@ data$EVTYPE <- factor(data$EVTYPE)
 
 # Display the unique event types.
 levels(data$EVTYPE)
+```
 
+## Results
+
+### Across the United States, which types of events are most harmful with respect to population health?
+
+The top most harmful weather events to the population are determined by first, filtering the data to the timeframe of 1993 to 2011. This is done to eliminate incomplete data in prior years, which consists largely of tornado and thunderstorm data. Due to the recording of these weather events during those early years, the total results of the data (over all years) would be skewd in favor of these events. We therefore filter the years to the range where the majority of weather events were recorded.
+
+```{r}
 # Filter the dataset to records starting at 1993 and later (due to missing data in prior years, which would skew results towards Tornado and Thunderstorm being over-represented while calculating total numbers across years).
 data1993 <- data[data$year >= 1993,]
 
@@ -196,7 +244,19 @@ g <- g + ylab('Total Fatalities and Injuries')
 g <- g + scale_fill_manual(values=c('#303030', 'red'))
 
 print(g)
+```
 
+As shown in the above bar chart, the most harmful weather event for the population over the years of 1993 to 2011 included: Tornadoes, Heat, and Floods. Note, the chart includes the total sum of both injuries and fatalities over the time period.
+
+Tornadoes are, by far, the most harmful weather event to the population. Tornadoes are unpredictible, powerful, and can occur with little warning.
+
+As the analysis shows, tornadoes have the highest injury count. However, "heat" results in the highest number of fatalities, as shown in the red bars.
+
+## Are the most harmful weather events causing more or less damage over time?
+
+The initial analysis of the most harmful weather events omitted a large portion of data from prior years, in order to prevent skewing the data. However, it is interesting to examine the data by decade, across all years. This allows us to gauge the overall trend and population effect of several weather events over time.
+
+```{r}
 # Calculate the total fatalities per event type and per decade.
 fatalitiesByDecade <- aggregate(FATALITIES ~ EVTYPE + decade, data, FUN=sum)
 
@@ -225,7 +285,19 @@ g <- g + guides(colour = guide_legend(override.aes = list(size=4)))
 g <- g + scale_colour_colorblind()
 
 print(g)
+```
 
+The above time-series chart shows the top 8 most harmful events by decade. Notice, we include data from all available years. This is reflected in Tornado (purple) and Thunderstorm (orange) displaying values prior to 1990, while all other weather events begin at 1990.
+
+As the time-series plot corroborates, tornadoes continue to be the most harmful of severe weather events, both in the past and current. There is a significant spike in tornado injury and fatalities during the 1960's, leading up to 1970. At this point, the count drops dramatically. This may be due to technological improvements in tornado warning systems and public protection. This trend continues downward, likely with the advent of computing technologies to aid in early detection.
+
+Note, all of the harmful weather events included in the chart contain a downward trend, likely resulting from improvements in technologies, radar, early warning systems, and construction improvements.
+
+## Across the United States, which types of events have the greatest economic consequences?
+
+The severe weather events with the greatest economical impact can be determined by examining the property damage and crop damage totals for each event. We, again, filter from the years 1993 to 2011, in order to remove data that may skew the results. We then compute the sum of the property and crop damage for each event over time, as follows:
+
+```{r}
 # Calculate the property damage by multiplying PROPDMG by PROPDMGEXP.
 propertyDamage <- aggregate(multiplyDamage(PROPDMG, PROPDMGEXP) ~ EVTYPE, data1993, FUN=sum)
 names(propertyDamage)[2] <- 'Cost'
@@ -253,3 +325,14 @@ g <- g + xlab('Event')
 g <- g + ylab('Total Property and Crop Damage')
 
 print(g)
+```
+
+As shown in the above chart, Thunderstorms results in the highest economical impact. Thunderstorms can be widespread, frequent, and cause significant damages. Flooding is the second most severe weather event, and is often a result of thunderstorms, hurricanes, typhoons, and other severe rain events.
+
+Conclusion
+
+Through the analysis of the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, we've determined that the top most harmful weather events to the population, from the years 1993 to 2011, include tornadoes, heat, and floods.
+
+The weather events with the greatest economical impact to property and crop damage, include thunderstorms, flooding, and tornadoes.
+
+While several weather events continue to impact the population, the analysis shows that the general trend of these harmful weather events is on a downward slope over time. This offers a positive reflection to the future management of these severe weather events.
