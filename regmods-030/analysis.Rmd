@@ -73,7 +73,7 @@ g <- g + xlab('Transmission Type')
 g <- g + ylab('MPG')
 ```
 
-## Data Analysis
+## Exploratory Analysis with Multiple Models
 
 By analyzing the coefficients in the linear model, it can be found that the transmission type is statistically significant when compared with the mpg.
 
@@ -155,7 +155,7 @@ g <- g + ylab('MPG')
 print(g)
 ```
 
-*Figure 1. This chart displays the difference in MPG by transmission type. Manual transmissions generally achieve higher values for MPG than automatic, with a clear separation arond 23 MPG.*
+*Figure 1. This chart displays the difference in MPG by transmission type. Manual transmissions generally achieve higher values for MPG than automatic, with a clear separation around 23 MPG.*
 
 ```{r, echo=FALSE}
 # Create a linear model for mpg (outcome) and am (predictor).
