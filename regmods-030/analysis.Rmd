@@ -1,20 +1,20 @@
 ---
 title: "Automotive Analysis of Transmission vs MPG"
-date: "July 13, 2015"
+date: "July 15, 2015"
 output: html_document
 ---
 
 ## Executive Summary
 
-Automotive efficiency is an important qualification for many car buyers. This is especially the case during times of rising fuel costs. This report analyzes the relationship between miles-per-gallen (MPG) and type of transmission. It was found that, overall, manual transmissions achieve the highest mpg efficiency. When combined with number of cylinders, 4-cylinder manual transmissions result in the highest mpg efficency.
+Automotive efficiency is an important qualification for many car buyers. This report analyzes the relationship between miles-per-gallen (MPG) and type of transmission. It was found that, overall, manual transmissions achieve the highest mpg efficiency. When combined with number of cylinders and weight, 4-cylinder manual transmissions result in the highest mpg efficency.
 
 ## Data Processing
 
 The data source for the analysis is extracted from the 1974 Motor Trend US magazine, which includes fuel consumption and details of different car models for the years 1973 and 1974.
 
-We begin the data analysis by including relevant libraries for processing, along with the "mtcars" dataset.
+We begin the data analysis by including relevant libraries for processing the "mtcars" dataset.
 
-```{r}
+```{r, echo=FALSE}
 ## Including the required R packages.
 packages <- c("ggplot2", "ggthemes", "reshape2")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
@@ -31,20 +31,16 @@ data(mtcars)
 
 The data set contains 11 columns, of which two are relevant for our analysis. They are "Number of cylinders" and "Transmission", or cyl and am, respectively.
 
-```{r}
-head(mtcars)
-```
+By examining the contents of the data set, it can be determined that the cylinder and transmission information may be converted to factors for processing.
 
-By examining the contents of the data set, it can be determined that the cylinder and transmission information may be converted to factors for processing. Notice, the original values are numeric. The data can be converted to a more usable format, as follows.
-
-```{r}
+```{r, echo=FALSE, results="hide"}
 # Create factors for key columns.
 mtcars$am2 <- factor(mtcars$am)
 levels(mtcars$am2) <- c('Automatic', 'Manual')
 mtcars$cyl2 <- factor(mtcars$cyl)
 
 # Re-display data.
-head(mtcars)
+head(mtcars, 3)
 ```
 
 ## Model Selection
@@ -53,7 +49,7 @@ For model selection, we'll analyze the direct relationship between miles-per-gal
 
 An initial plot of the mpg vs transmission data displays a dispersal of points, across the types of transmission. We can see a visible difference between mpg for automatic versus manual, with manual transmissions achieving the upper range of MPG. See Figure 1.
 
-```{r}
+```{r, echo=FALSE}
 # Display the mpg vs am data as a boxplot.
 g <- ggplot(mtcars, aes(x = am2, y = mpg))
 g <- g + geom_boxplot()
@@ -62,9 +58,9 @@ g <- g + xlab('Transmission Type')
 g <- g + ylab('MPG')
 ```
 
-We can obtain a more detailed view of the actual data points in the samples by plotting the points across the transmission type, and overlaying a linear model to highlight the trend. See Figure 2.
+We can obtain a more detailed view of the actual data points in the samples by plotting the points across the transmission type, and overlaying a linear model to highlight the trend.
 
-```{r}
+```{r, echo=FALSE}
 # Create a linear model for mpg (outcome) and am (predictor).
 fit <- lm(mpg ~ am, mtcars)
 
@@ -81,31 +77,29 @@ g <- g + ylab('MPG')
 
 By analyzing the coefficients in the linear model, it can be found that there is a 7.24 change in MPG for every 1/10th change in value of transmission, as transmission types moves from 0 (automatic) to 1 (manual).
 
-```{r}
+```{r, echo=FALSE, results="hide"}
 coef(summary(fit))
 ```
 
 It can further be determined that the transmission type is statistically significant when compared with the mpg.
 
-```{r}
+```{r, echo=FALSE, results="hide"}
 anova(fit)
 ```
 
 However, there may be other important factors that impact mpg and transmission type. We can determine which factors may be statistically significant by creating a linear model of all regressors in the data set and checking their significance.
 
-```{r}
+```{r, echo=FALSE, results="hide"}
 anova(lm(mpg ~ ., mtcars))
 ```
 
-As we can see in the result, the statistically significant regressors with regard to mpg include cyl, disp, and wt (Number of Cylinders, Displacement, and Weight). We'll take the most significant of the three, Number of Cylinders, for further analysis. This will also aid in determining whether automatic or manual transmission achieves better fuel efficiency.
+As we can see in the result, the statistically significant regressors with regard to mpg include number of cylinders, displacement, and weight. We can compare residual plots to determine which combination offers the closest model for the data.
 
-## Residual Plot
+## Residual Plots
 
-Based on the above findings, we can plot the residuals from the linear models to determine if our model (containing mpg, transmission type, and number of cylinders) is a viable model.
+The first residual plot displays a close correlation between transmission type and mpg. After adding number of cylinders to the model, the correlation begins to appear less coorelated. A final residual plot that includes transmission, cylinders, and weight appears to contain the best fit. See Figure 2.
 
-In our first residual plot (see Figure 3), the data points follow a close pattern around index 0. This may demonstrate a correlation with the regressor.
-
-```{r}
+```{r, echo=FALSE, results="hide"}
 res <- resid(fit)
 
 g <- ggplot(mtcars, aes(x = mpg, y = res))
@@ -116,9 +110,7 @@ g <- g + xlab('MPG')
 g <- g + ylab('Residuals')
 ```
 
-We can verify our second model for correlation by drawing a residual plot with mpg, transmission type, and number of cylinders.
-
-```{r}
+```{r, echo=FALSE, results="hide"}
 # Create a linear model for mpg (outcome) and am (predictor).
 fit2 <- lm(mpg ~ am + cyl2, mtcars)
 
@@ -134,9 +126,9 @@ g <- g + ylab('Residuals')
 
 ## Is an automatic or manual transmission better for MPG?
 
-To determine which transmission type offers better fuel efficiency, we'll plot the varying transmission type by mpg, and include the number of cylinders of each type. See Figure 5.
+As shown in Figure 5, we can determine that manual transmission is generally better for mpg. Two of three types for Number of Cylinders hold a negative change in value for mpg, with 6 and 8-cylinder cars having a negative effect By contrast, 4-cylinder cars have a positive impact on mpg, and when combined with manual transmission, the highest efficiency of mpg fuel utilization can be reached.
 
-```{r}
+```{r, echo=FALSE}
 # Display the mpg vs am data.
 g <- ggplot(mtcars, aes(x = am, y = mpg))
 g <- g + geom_point(aes(color = cyl2, size = cyl2))
@@ -146,10 +138,6 @@ g <- g + ggtitle('MPG by Transmission Type for Automobiles During 1973-1974')
 g <- g + xlab('Transmission Type')
 g <- g + ylab('MPG')
 ```
-
-As we can see in the chart (Figure 5), two of three types for Number of Cylinders hold a negative change in value for mpg, with 6 and 8-cylinder cars having a negative effect on mpg. By contrast, 4-cylinder cars have a positive impact on mpg, and when combined with manual transmission, the highest efficiency of mpg fuel utilization can be reached.
-
-Based on our findings, we can determine that manual transmission is generally better for mpg. However, this still depends on the type and model.
 
 ## What is the MPG difference between automatic and manual transmissions?
 
@@ -175,41 +163,8 @@ print(g)
 *Figure 1. This chart displays the difference in MPG by transmission type. Manual transmissions generally achieve higher values for MPG than automatic, with a clear separation arond 23 MPG.*
 
 ```{r, echo=FALSE}
-# Display the mpg vs am data.
-g <- ggplot(mtcars, aes(x = am2, y = mpg))
-g <- g + geom_point()
-g <- g + geom_abline(intercept = coef(fit)[1], slope = coef(fit)[2], colour = 'red')
-g <- g + ggtitle('MPG by Transmission Type for Automobiles During 1973-1974')
-g <- g + xlab('Transmission Type')
-g <- g + ylab('MPG')
-
-print(g)
-```
-
-*Figure 2. The trend in higher MPG is apparent across transmission type, moving from automatic to manual transmission.*
-
-```{r, echo=FALSE}
 # Create a linear model for mpg (outcome) and am (predictor).
-fit2 <- lm(mpg ~ am + cyl2, mtcars)
-
-res1 <- resid(fit)
-res2 <- resid(fit2)
-
-g <- ggplot(mtcars, aes(x = mpg, y = res1))
-g <- g + geom_point()
-g <- g + geom_abline(aes(intercept = 0, slope = 0))
-g <- g + ggtitle('MPG vs Transmission Residual Plot')
-g <- g + xlab('MPG')
-g <- g + ylab('Residuals')
-
-print(g)
-```
-
-*Figure 3. A residual plot of the linear model for mpg vs transmission type. A distinct pattern between data points at the line is visible.*
-
-```{r, echo=FALSE}
-# Create a linear model for mpg (outcome) and am (predictor).
-fit2 <- lm(mpg ~ am + cyl2, mtcars)
+fit2 <- lm(mpg ~ am + cyl2 + wt, mtcars)
 
 res <- resid(fit2)
 
@@ -223,7 +178,7 @@ g <- g + ylab('Residuals')
 print(g)
 ```
 
-*Figure 4. A residual plot of the linear model for mpg, transmission type, and number of cylinders. An uncorrelated pattern is displayed.*
+*Figure 2. A residual plot of the linear model for mpg, transmission type, and number of cylinders. An uncorrelated pattern is displayed.*
 
 ```{r, echo=FALSE}
 # Display the mpg vs am data.
@@ -238,4 +193,4 @@ g <- g + ylab('MPG')
 print(g)
 ```
 
-*Figure 5. Automobiles with 4-cylinder engines achieve the highest rates of MPG, especially when combined with manual transmission. The three classes of cylinders fall within boundaries with 8-cylinder (red) displaying at the bottom range of MPG, 6-cylinder (orange) in the middle, and 4-cylinder (black) at the top. All three increase in MPG with manual transmission, compared to automatic.*
+*Figure 3. Automobiles with 4-cylinder engines achieve the highest rates of MPG, especially when combined with manual transmission. The three classes of cylinders fall within boundaries with 8-cylinder (red) displaying at the bottom range of MPG, 6-cylinder (orange) in the middle, and 4-cylinder (black) at the top. All three increase in MPG with manual transmission, compared to automatic.*
