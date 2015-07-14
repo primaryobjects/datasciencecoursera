@@ -7,6 +7,7 @@ This repository contains projects from the Coursera - Johns Hopkins University d
 - Getting and Cleaning Data
 - Exploratory Data Analysis
 - Reproducible Research
+- Regression Models
 
 ## Projects
 
@@ -27,6 +28,12 @@ Project 2 - [National Emissions Inventory (NEI)](https://github.com/primaryobjec
 
 Project 1 - [Personal Activity Monitoring Device Analysis (Fitbit)](https://github.com/primaryobjects/datasciencecoursera/tree/master/repdata-015/project1)  
 Project 2 - [U.S. National Oceanic and Atmospheric Administration's (NOAA) Storm Database](https://github.com/primaryobjects/datasciencecoursera/tree/master/repdata-015/project2)
+
+#### Regression Models
+
+Project 1 - [MPG vs Automatic and Manual Transmission Analysis](https://github.com/primaryobjects/datasciencecoursera/blob/master/regmods-030/Automotive%20Analysis%20of%20Transmission%20vs%20MPG.pdf)
+
+[Markdown Document](https://github.com/primaryobjects/datasciencecoursera/blob/master/regmods-030/analysis.Rmd)
 
 ## Author
 
