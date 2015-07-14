@@ -68,42 +68,45 @@ img {
 
 <div id="executive-summary" class="section level2">
 <h2>Executive Summary</h2>
-<p>Automotive efficiency is an important qualification for many car buyers. This report analyzes the relationship between miles-per-gallen (MPG) and type of transmission. It was found that, overall, manual transmissions achieve the highest mpg efficiency. When combined with number of cylinders and weight, 4-cylinder manual transmissions result in the highest mpg efficency.</p>
+<p>Automotive efficiency is an important qualification for many car buyers. This report analyzes the relationship between miles-per-gallen (mpg) and type of transmission. It was found that manual transmissions achieve the highest mpg efficiency, even while considering both number of cylinders and automobile weight. The most optimal model is a 4-cylinder manual transmissions, resulting in the highest mpg efficency.</p>
 </div>
 <div id="data-processing" class="section level2">
 <h2>Data Processing</h2>
 <p>The data source for the analysis is extracted from the 1974 Motor Trend US magazine, which includes fuel consumption and details of different car models for the years 1973 and 1974.</p>
 <p>We begin the data analysis by including relevant libraries for processing the “mtcars” dataset.</p>
-<p>The data set contains 11 columns, of which two are relevant for our analysis. They are “Number of cylinders” and “Transmission”, or cyl and am, respectively.</p>
+<p>The data set contains 11 columns, of which two are directly relevant for our analysis. They are “Number of cylinders” and “Transmission”, or cyl and am, respectively.</p>
 <p>By examining the contents of the data set, it can be determined that the cylinder and transmission information may be converted to factors for processing.</p>
 </div>
 <div id="model-selection" class="section level2">
 <h2>Model Selection</h2>
 <p>For model selection, we’ll analyze the direct relationship between miles-per-gallon and transmission type (automatic and manual).</p>
-<p>An initial plot of the mpg vs transmission data displays a dispersal of points, across the types of transmission. We can see a visible difference between mpg for automatic versus manual, with manual transmissions achieving the upper range of MPG. See Figure 1.</p>
-<p>We can obtain a more detailed view of the actual data points in the samples by plotting the points across the transmission type, and overlaying a linear model to highlight the trend.</p>
+<p>An initial plot of the mpg vs transmission data displays a dispersal of points across the types of transmission. Automatic averages a range from 15 to 18 with a mean of 17.15, while manual averages from 21 to 30 with a mean of 24.39. There is a visible difference between mpg for automatic versus manual, with manual transmissions achieving the upper range. See Figure 1.</p>
+<p>We can obtain a more detailed view of the actual data points in the samples by plotting the points across the transmission type, and overlaying a linear model to highlight the trend. This simple initial model includes mpg vs transmission type. The predicted mpg for automatic is the mean of 17.15, while the predicted mpg for manual is its mean of 24.39.</p>
 </div>
 <div id="exploratory-analysis-with-multiple-models" class="section level2">
 <h2>Exploratory Analysis with Multiple Models</h2>
-<p>By analyzing the coefficients in the linear model, it can be found that the transmission type is statistically significant when compared with the mpg.</p>
+<p>By analyzing the coefficients in the linear model, it can be found that the transmission type is statistically significant when compared with the mpg. The model shows that we expect an increase of 7.24 mpg for manual vs automatic.</p>
 <p>However, there may be other important factors that impact mpg and transmission type. We can determine which factors may be statistically significant by creating a linear model of all regressors in the data set and checking their significance.</p>
 <p>The resulting data indicates that the statistically significant regressors with regard to mpg include number of cylinders, displacement, and weight. We can compare residual plots to determine which combination offers the closest model for the data.</p>
 </div>
 <div id="residual-plots" class="section level2">
 <h2>Residual Plots</h2>
 <p>The first residual plot displays a close correlation and non-random pattern between transmission type and mpg. After adding number of cylinders to the model, the correlation begins to appear more random. A final residual plot that includes mpg, transmission, cylinders, and weight displays a random pattern, indicating the linear model is an appropriate fit. See Figure 2.</p>
+<p>After including transmission, cylinder, and weight in the model we note the following values. Manual transmission increases mpg by only 0.15, 6-cylinders decreases mpg by -4.26, while 8-cylinders decreases mpg by -6.08. Weight decreases mpg by -3.15. By including weight, transmission type is no longer statistically signficant and manual vs automatic makes little difference in mpg.</p>
+<p>Since our focus is on transmission type, we can settle on a final model of transmission and cylinder count. Manual transmission increases mpg by 2.56. 6-cylinders decreases mpg by -6.16, while 8-cylinders decreases mpg by -10.07.</p>
 </div>
 <div id="is-an-automatic-or-manual-transmission-better-for-mpg" class="section level2">
 <h2>Is an automatic or manual transmission better for MPG?</h2>
-<p>As shown in Figure 3, we can determine that manual transmission is generally better for mpg. 6 and 8-cylinder cars have a negative effect on mpg. By contrast, 4-cylinder cars have a positive impact on mpg, and when combined with manual transmission, the highest efficiency of mpg fuel utilization can be reached.</p>
+<p>As shown in Figure 3, we can determine that manual transmission is better for mpg. We can predict from our model of mpg vs transmission + cylinders the following results:</p>
+<p>A 4-cylinder automobile will achieve 24.80 and 27.36 mpg for automatic and manual respectively, while 6-cylinders will achieve 18.65 and 21.21 mpg, and 8-cylinders 14.73 and 17.29 mpg respectively.</p>
 </div>
 <div id="what-is-the-mpg-difference-between-automatic-and-manual-transmissions" class="section level2">
 <h2>What is the MPG difference between automatic and manual transmissions?</h2>
-<p>While manual transmission, overall, achieves higher mpg efficiency than automatic transmissions, there is a division at around 25 mpg where automatic and manual transmissions differ. At this level, manual transmissions exceed automatic in mpg, most notably with those of 4-cylinder engines.</p>
+<p>Based upon our initial model of mpg vs transmission, we can expect a 7.24 mpg increase in manual vs automatic transmission. When considering number of cylinders, we expect a 2.56 mpg increase for manual vs automatic, and upon including weight, we expect a 0.15 mpg increase for manual transmissions.</p>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
-<p>In this analysis, we’ve determined that there is an overall trend of manual transmission achieving higher mpg efficiency than automatic transmissions. This effect is less for higher cylinder cars. However, we’ve found that lower cyclinder engines achieve the most optimal mpg usage, with 4-cycliner engines resulting in the highest mpg.</p>
+<p>In this analysis, we’ve determined that there is an overall trend of manual transmission achieving higher mpg efficiency than automatic transmissions. This effect is less for higher cylinder and higher weight cars, but holds effect nonetheless. The most optimal combination for mpg is a 4-cycliner manual transmission, resulting in the highest mpg.</p>
 </div>
 <div id="appendix" class="section level2">
 <h2>Appendix</h2>
