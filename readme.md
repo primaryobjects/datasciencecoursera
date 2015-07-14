@@ -31,7 +31,7 @@ Project 2 - [U.S. National Oceanic and Atmospheric Administration's (NOAA) Storm
 
 #### Regression Models
 
-Project 1 - [MPG vs Automatic and Manual Transmission Analysis](https://github.com/primaryobjects/datasciencecoursera/blob/master/regmods-030/Automotive%20Analysis%20of%20Transmission%20vs%20MPG.pdf)
+Project 1 - [MPG vs Automatic and Manual Transmission Analysis](https://github.com/primaryobjects/datasciencecoursera/blob/master/regmods-030/Automotive%20Analysis%20of%20Transmission%20vs%20MPG.pdf)  
 [Markdown Document](https://github.com/primaryobjects/datasciencecoursera/blob/master/regmods-030/analysis.Rmd)
 
 ## Author
