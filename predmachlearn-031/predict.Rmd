@@ -64,7 +64,7 @@ cv <- t[[2]]
 #cvAccuracy <- 1 - cvError
 
 # Analysis 2: SVM
-# First, determine optimal svm settings by doing an SVM grid search on a subset of the training data. epsilon = from 0 to 1, step 0.3. cost = 2^2, 2^3 ... 2^6.
+# First, determine optimal svm settings by doing an SVM grid search on a subset of the training data (doing a grid search on the full training set would take too long). epsilon = from 0 to 1, step 0.3. cost = 2^2, 2^3 ... 2^6.
 tuneResult <- tune(svm, classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = head(training, 1000), ranges = list(epsilon = seq(0,1,0.3), cost = 2^(2:6)))
 plot(tuneResult)
 
@@ -72,13 +72,6 @@ plot(tuneResult)
 tunedModel <- tuneResult$best.model
 cost <- tuneResult$best.model$cost
 gamma <- tuneResult$best.model$gamma
-
-##ty1 <- predict(tunedModel, training)
-##ty1e <- sum(training$classe != ty1) / nrow(training)
-##ty1a <- 1 - ty1e
-##ty2 <- predict(tunedModel, cv)
-##ty2e <- sum(cv$classe != ty2) / nrow(cv)
-##ty2a <- 1 - ty2e
 
 # Create an svm model on training set.
 mod2 <- svm(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, training, cost = cost, gamma = gamma)
