@@ -234,9 +234,15 @@ round(predict(fit3, newdata = data.frame(am = c(0, 1), cyl2 = c('8', '8'), wt = 
 <div id="what-is-the-mpg-difference-between-automatic-and-manual-transmissions" class="section level2">
 <h2>What is the MPG difference between automatic and manual transmissions?</h2>
 <p>Based upon our initial model of mpg vs transmission, we can expect a 7.25 mpg increase in manual vs automatic transmission. When considering number of cylinders, we expect a 2.56 mpg increase for manual vs automatic, and upon including weight, we expect a 0.15 mpg increase for manual transmissions.</p>
-<pre class="r"><code>coef(fit)
-coef(fit2)
-coef(fit3)</code></pre>
+<pre class="r"><code>coef(fit)</code></pre>
+<pre><code>## (Intercept)          am 
+##   17.147368    7.244939</code></pre>
+<pre class="r"><code>coef(fit2)</code></pre>
+<pre><code>## (Intercept)          am       cyl26       cyl28 
+##   24.801852    2.559954   -6.156118  -10.067560</code></pre>
+<pre class="r"><code>coef(fit3)</code></pre>
+<pre><code>## (Intercept)          am       cyl26       cyl28          wt 
+##  33.7535920   0.1501031  -4.2573185  -6.0791189  -3.1495978</code></pre>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>

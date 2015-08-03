@@ -170,7 +170,7 @@ round(predict(fit3, newdata = data.frame(am = c(0, 1), cyl2 = c('8', '8'), wt = 
 
 Based upon our initial model of mpg vs transmission, we can expect a 7.25 mpg increase in manual vs automatic transmission. When considering number of cylinders, we expect a 2.56 mpg increase for manual vs automatic, and upon including weight, we expect a 0.15 mpg increase for manual transmissions.
 
-```{r, echo=TRUE, results="hide"}
+```{r, echo=TRUE}
 coef(fit)
 coef(fit2)
 coef(fit3)
