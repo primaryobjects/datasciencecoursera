@@ -255,8 +255,29 @@ Based upon our initial model of mpg vs transmission, we can expect a 7.25 mpg in
 
 ```r
 coef(fit)
+```
+
+```
+## (Intercept)          am 
+##   17.147368    7.244939
+```
+
+```r
 coef(fit2)
+```
+
+```
+## (Intercept)          am       cyl26       cyl28 
+##   24.801852    2.559954   -6.156118  -10.067560
+```
+
+```r
 coef(fit3)
+```
+
+```
+## (Intercept)          am       cyl26       cyl28          wt 
+##  33.7535920   0.1501031  -4.2573185  -6.0791189  -3.1495978
 ```
 
 ## Conclusion
