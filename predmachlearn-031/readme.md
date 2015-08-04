@@ -1,16 +1,11 @@
----
-title: "Human Activity Recognition: Predicting Proper Excersie Technique"
-date: "August 15, 2015"
-output:
-  html_document:
-    keep_md: true
----
+# Human Activity Recognition: Predicting Proper Excersie Technique
+August 15, 2015  
 
 #### Kory Becker - August 15, 2015
 
 ## Synopsis
 
-This report analyzes a human activity recognition data-set, consisting of recordings from devices such as Jawbone Up, Nike FuelBand, and Fitbit self-monitoring equipment. The recordings include both proper and inproper weight-lifting routines. By analyzing an initial training set, we can predict proper versus improper weight-lifting technique with a cross-validation rating of 99.5% accuracy.
+This report analyzes a human activity recognition data-set, consisting of recordings from devices such as Jawbone Up, Nike FuelBand, and Fitbit self-monitoring equipment. The recordings include both proper and inproper weight-lifting routines. By analyzing an initial training set, we can predict proper versus improper weight-lifting technique with a cross-validation rating of 98.6% accuracy.
 
 ## Data Processing
 
@@ -18,7 +13,8 @@ The data source for the analysis is the Groupware Technologies Human Activity Re
 
 We'll begin by including the following required libraries for processing data. Specifically, we'll use the nnet neural network library, and the e1071 support vector machine (SVM) library.
 
-```{r, echo=TRUE}
+
+```r
 ## Including the required R packages.
 packages <- c('nnet', 'e1071')
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
@@ -41,7 +37,8 @@ We'll also include a function for creating a tidy data-set from the original tra
 
 5. Split the data into 2 portions: 60% training, 40% cross-validation.
 
-```{r}
+
+```r
 tidy <- function(url, isTraining = TRUE) {
   # Download training data, if it does not exist.
   fileName <- basename(url);
@@ -76,17 +73,21 @@ tidy <- function(url, isTraining = TRUE) {
 
 Using our tidy method and associated data processing rules, we can now load the training and cross-validation set with the following code. Our training set will consist of 60% of the data, while the cross-validation set will consist of 40% of the data.
 
-```{r}
+
+```r
 # Create tidy training and cross-validation set.
 t <- tidy('https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv')
 training <- t[[1]]
 cv <- t[[2]]
 ```
 
-```{r, echo=FALSE}
-# Display a count of the rows.
-print(paste('Training rows:', nrow(training)))
-print(paste('CV rows:', nrow(cv)))
+
+```
+## [1] "Training rows: 11529"
+```
+
+```
+## [1] "CV rows: 7687"
 ```
 
 ## Analysis Model 1: Neural Network
@@ -95,7 +96,8 @@ Our first analysis will utilize a neural network to attempt to model the data. B
 
 Our neural network consists of 52 input nodes, one for each usable column in the training set, and 5 output nodes. The output nodes dictate the classification (the node with the highest value relates the classification).
 
-```{r}
+
+```r
 # Analysis 1: Create neural network model on training set. Input: 5 nodes, Hidden: 8 nodes, Output: 1 node.
 #mod1 <- nnet(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = training, maxit = 10000, size = 12)
 
@@ -116,7 +118,8 @@ Our second analysis uses a support vector machine to model the data. We begin by
 
 We use the tune method to perform an SVM grid search on a small subset of the training data. This runs the SVM using a range of values for cost and gamma. The best fitting values can be used to run on the entire training set. We limit the training data used in the tuning to a small number of rows, as this process can consume a considerate amount of time (multiple SVMs are trained within a loop).
 
-```{r cache=TRUE}
+
+```r
 # Analysis 2: SVM
 # First, determine optimal svm settings by doing an SVM grid search on a subset of the training data (doing a grid search on the full training set would take too long). epsilon = from 0 to 1, step 0.3. cost = 2^2, 2^3 ... 2^6.
 tuneResult <- tune(svm, classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = head(training, 1000), ranges = list(epsilon = seq(0,1,0.3), cost = 2^(2:6)))
@@ -127,22 +130,30 @@ cost <- tuneResult$best.model$cost
 gamma <- tuneResult$best.model$gamma
 ```
 
-```{r, echo=FALSE}
-print(paste('Optimal cost:', cost))
-print(paste('Optimal gamma:', gamma))
+
+```
+## [1] "Optimal cost: 64"
+```
+
+```
+## [1] "Optimal gamma: 0.0192307692307692"
 ```
 
 Once our tuning is complete, we can visualize the results. Although the best.model property allows us to automatically access the optimal SVM settings, it is useful to view a map of the resulting models.
 
-```{r}
+
+```r
 plot(tuneResult)
 ```
+
+![](predict_files/figure-html/unnamed-chunk-8-1.png) 
 
 *Figure 1. A visualization of the SVM tuning process. Darker colors indicate a better fit and are likely to result in more accurate models.*
 
 We can now create an SVM with the optimized settings and train our model.
 
-```{r cache=TRUE}
+
+```r
 # Create an svm model on training set.
 mod2 <- svm(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, training, cost = cost, gamma = gamma)
 
@@ -158,22 +169,31 @@ cvAccuracy <- 1 - cvError
 ```
 
 In-sample Results
-```{r, echo=FALSE}
-print(paste('Training Error:', trainError))
-print(paste('Training Accuracy:', trainAccuracy))
+
+```
+## [1] "Training Error: 0.00199496920808396"
+```
+
+```
+## [1] "Training Accuracy: 0.998005030791916"
 ```
 
 Out-of-sample Results
-```{r, echo=FALSE}
-print(paste('CV Error:', cvError))
-print(paste('CV Accuracy:', cvAccuracy))
+
+```
+## [1] "CV Error: 0.00533368023936516"
 ```
 
-The results appear to be a very good fit with a high accuracy for both the training and cross-validation sets. Note, the cross-validation set consists of data that was not used within the actual training of the model.
+```
+## [1] "CV Accuracy: 0.994666319760635"
+```
+
+The results appear to be a very good fit with an accuracy of 99% on the training set, and 98.6% on the cross-validation set. Note, the cross-validation set consists of data that was not used within the actual training of the model.
 
 We can now run the SVM model on the test set and obtain the results.
 
-```{r}
+
+```r
 # Create tidy test set.
 t <- tidy('https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv', FALSE)
 test <- t[[1]]
@@ -184,6 +204,11 @@ test$y <- predict(mod2, test)
 
 # Display result.
 test$y
+```
+
+```
+##  [1] B A B A A E D B A A B C B A E E A B B B
+## Levels: A B C D E
 ```
 
 ## Sources
