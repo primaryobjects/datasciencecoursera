@@ -113,7 +113,7 @@ Our first analysis will utilize a neural network to attempt to model the data. B
 Our neural network consists of 52 input nodes, one for each usable column in the training set, and 5 output nodes. The output nodes dictate the classification (the node with the highest value relates the classification).
 
 ```{r}
-# Analysis 1: Create neural network model on training set. Input: 5 nodes, Hidden: 8 nodes, Output: 1 node.
+# Analysis 1: Create neural network model on training set.
 #mod1 <- nnet(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = training, maxit = 10000, size = 12)
 
 # Predict results of nnet on training.
@@ -131,10 +131,9 @@ Our neural network consists of 52 input nodes, one for each usable column in the
 
 Our second analysis uses a support vector machine to model the data. We begin by determining the optimal settings for the SVM. Specifically, we'll configure the cost and gamma variables, which indicate how closely to fit the data with regard to bias and variance.
 
-We use the tune method to perform an SVM grid search on a small subset of the training data. This runs the SVM using a range of values for cost and gamma. The best fitting values can be used to run on the entire training set. We limit the training data used in the tuning to a small number of rows, as this process can consume a considerate amount of time (multiple SVMs are trained within a loop).
+We use the tune method to perform an SVM grid search on a small subset of the training data. This runs the SVM using a range of values for cost and gamma. The best fitting values can be used to run on the entire training set. We limit the training data used in the tuning to a small number of rows, as this process can consume a considerable amount of time (multiple SVMs are trained within a loop).
 
 ```{r cache=TRUE}
-# Analysis 2: SVM
 # First, determine optimal svm settings by doing an SVM grid search on a subset of the training data (doing a grid search on the full training set would take too long). epsilon = from 0 to 1, step 0.3. cost = 2^2, 2^3 ... 2^6.
 tuneResult <- tune(svm, classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = head(training, 1000), ranges = list(epsilon = seq(0,1,0.3), cost = 2^(2:6)))
 
