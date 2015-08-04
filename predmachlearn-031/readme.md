@@ -98,16 +98,16 @@ cv <- t[[2]]
 
 ## Analysis Model 1: Neural Network
 
-Our first analysis will utilize a neural network to attempt to model the data. By using differing numbers of neurons in the hidden layer, we can control bias and variance. The larger the number of hidden neurons, the larger the variance, and potential exists for overfitting. More neurons also increases training time. It is therefore important to limit the hidden layer size, according to the data.
+Our first analysis will utilize a neural network to attempt to model the data. By using differing numbers of neurons in the hidden layer, we can control bias and variance. The larger the number of hidden neurons, the larger the variance, and potential exists for overfitting. More neurons also increases training time. It is therefore helpful to limit the hidden layer size, according to the data.
 
 Our neural network consists of 52 input nodes, one for each usable column in the training set, and 5 output nodes. The output nodes dictate the classification (the node with the highest value relates the classification).
 
-We can initially run the neural network on a subset of training data, in order to speed up training time while searching for optimal parameters.
+We can initially run the neural network on a subset of training data, in order to speed up training time while searching for optimal parameters. Once a desired range is found, the full training set may be used.
 
 
 ```r
 # Analysis 1: Create neural network model on training set.
-mod1 <- nnet(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = head(training, 1000), maxit = 10000, size = 8, decay = .5)
+mod1 <- nnet(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = training, maxit = 10000, size = 8, decay = .5)
 
 # Predict results of nnet on training.
 y <- predict(mod1, training, type='class')
@@ -123,24 +123,24 @@ cvAccuracy <- 1 - cvError
 In-sample Results
 
 ```
-## [1] "Training Error: 0.296296296296296"
+## [1] "Training Error: 0.0829213288229682"
 ```
 
 ```
-## [1] "Training Accuracy: 0.703703703703704"
+## [1] "Training Accuracy: 0.917078671177032"
 ```
 
 Out-of-sample Results
 
 ```
-## [1] "CV Error: 0.313256146741251"
+## [1] "CV Error: 0.109405489787954"
 ```
 
 ```
-## [1] "CV Accuracy: 0.686743853258749"
+## [1] "CV Accuracy: 0.890594510212046"
 ```
 
-Neural networks can take a considerable amount of time to train in order to obtain a high accuracy. However, they have the potential to fit a higher degree of complexity. Note, the training accuracy suffers from high bias and likely requires further fine-tuning of the parameters. We'll move on to an analysis based upon a support vector machine.
+Neural networks can take a considerable amount of time to train in order to obtain a high accuracy. However, they have the potential to fit a higher degree of complexity. By fine-tuning the parameters for size (number of hidden neurons) and weight decay, we can further optimize the results.
 
 ## Analysis Model 2: Support Vector Machine (SVM)
 
@@ -161,7 +161,7 @@ gamma <- tuneResult$best.model$gamma
 
 
 ```
-## [1] "Optimal cost: 32"
+## [1] "Optimal cost: 64"
 ```
 
 ```
@@ -175,7 +175,7 @@ Once our tuning is complete, we can visualize the results. Although the best.mod
 plot(tuneResult)
 ```
 
-![](predict_files/figure-html/unnamed-chunk-8-1.png) 
+![](predict_files/figure-html/unnamed-chunk-10-1.png) 
 
 *Figure 2. A visualization of the SVM tuning process. Darker colors indicate a better fit and are likely to result in a more accurate model.*
 
@@ -200,21 +200,21 @@ cvAccuracy <- 1 - cvError
 In-sample Results
 
 ```
-## [1] "Training Error: 0.00199496920808396"
+## [1] "Training Error: 0.00234192037470726"
 ```
 
 ```
-## [1] "Training Accuracy: 0.998005030791916"
+## [1] "Training Accuracy: 0.997658079625293"
 ```
 
 Out-of-sample Results
 
 ```
-## [1] "CV Error: 0.00533368023936516"
+## [1] "CV Error: 0.00871601404969429"
 ```
 
 ```
-## [1] "CV Accuracy: 0.994666319760635"
+## [1] "CV Accuracy: 0.991283985950306"
 ```
 
 The results appear to be a very good fit with a high accuracy for both the training and cross-validation sets. Note, the cross-validation set consists of data that was not used within the actual training of the model.
