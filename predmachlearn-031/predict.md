@@ -244,7 +244,7 @@ test$y
 
 ## Sources
 
-1. Groupware Technologies Human Activity Recognition *[[link]](http://groupware.les.inf.puc-rio.br/har)
+1. Groupware Technologies Human Activity Recognition *[[link]](http://groupware.les.inf.puc-rio.br/har)*
 
 2. Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human '13). Stuttgart, Germany: ACM SIGCHI, 2013. *[[link]](http://groupware.les.inf.puc-rio.br/work.jsf?p1=11201)*
 
