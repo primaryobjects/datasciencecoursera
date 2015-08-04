@@ -20,13 +20,15 @@ We'll begin by including the following required libraries for processing data. S
 
 ```{r, echo=TRUE}
 ## Including the required R packages.
-packages <- c('nnet', 'e1071')
+packages <- c('nnet', 'e1071', 'ggplot2', 'reshape2')
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))  
 }
 
 library(nnet)
 library(e1071)
+library(ggplot2)
+library(reshape2)
 ```
 
 We'll also include a function for creating a tidy data-set from the original training and test data. The tidy process includes the following actions:
@@ -83,11 +85,26 @@ training <- t[[1]]
 cv <- t[[2]]
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 # Display a count of the rows.
 print(paste('Training rows:', nrow(training)))
 print(paste('CV rows:', nrow(cv)))
+
+# Display a bar plot of the counts.
+counts <- data.frame(type = c('Training', 'CV'), value = c(nrow(training), nrow(cv)))
+ggplot(melt(counts), aes(x=variable, y=value, fill=type)) +
+  geom_bar(stat='identity') +
+  theme_bw() +
+  ggtitle('Training vs Cross Validation Sample Counts') +
+  xlab('Type') +
+  ylab('# of Samples') +
+  theme(legend.title=element_blank(), plot.title = element_text(size=20, face="bold", vjust=2), axis.text.x = element_blank()) +
+  scale_fill_manual(values=c('dodgerblue', 'blue')) +
+  geom_text(aes(1, 5000, label=paste(nrow(training), 'Samples')), color='white') +
+  geom_text(aes(1, 15000, label=paste(nrow(cv), 'Samples')), color='white')
 ```
+
+*Figure 1. Sample counts for training versus cross-validation sets. The initial training data-set is split 60/40 to allow for in-sample and out-of-sample results.*
 
 ## Analysis Model 1: Neural Network
 
@@ -138,7 +155,7 @@ Once our tuning is complete, we can visualize the results. Although the best.mod
 plot(tuneResult)
 ```
 
-*Figure 1. A visualization of the SVM tuning process. Darker colors indicate a better fit and are likely to result in more accurate models.*
+*Figure 2. A visualization of the SVM tuning process. Darker colors indicate a better fit and are likely to result in a more accurate model.*
 
 We can now create an SVM with the optimized settings and train our model.
 
@@ -184,6 +201,19 @@ test$y <- predict(mod2, test)
 
 # Display result.
 test$y
+```
+
+```{r, echo=FALSE}
+pml_write_files = function(x) {
+  n = length(x)
+  
+  for(i in 1:n) {
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+
+pml_write_files(test$y)
 ```
 
 ## Sources

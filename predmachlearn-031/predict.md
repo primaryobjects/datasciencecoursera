@@ -5,7 +5,7 @@ August 15, 2015
 
 ## Synopsis
 
-This report analyzes a human activity recognition data-set, consisting of recordings from devices such as Jawbone Up, Nike FuelBand, and Fitbit self-monitoring equipment. The recordings include both proper and inproper weight-lifting routines. By analyzing an initial training set, we can predict proper versus improper weight-lifting technique with a cross-validation rating of 98.6% accuracy.
+This report analyzes a human activity recognition data-set, consisting of recordings from devices such as Jawbone Up, Nike FuelBand, and Fitbit self-monitoring equipment. The recordings include both proper and inproper weight-lifting routines. By analyzing an initial training set, we can predict proper versus improper weight-lifting technique with a cross-validation rating of 99.5% accuracy.
 
 ## Data Processing
 
@@ -16,13 +16,15 @@ We'll begin by including the following required libraries for processing data. S
 
 ```r
 ## Including the required R packages.
-packages <- c('nnet', 'e1071')
+packages <- c('nnet', 'e1071', 'ggplot2', 'reshape2')
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))  
 }
 
 library(nnet)
 library(e1071)
+library(ggplot2)
+library(reshape2)
 ```
 
 We'll also include a function for creating a tidy data-set from the original training and test data. The tidy process includes the following actions:
@@ -90,6 +92,10 @@ cv <- t[[2]]
 ## [1] "CV rows: 7687"
 ```
 
+![](predict_files/figure-html/unnamed-chunk-4-1.png) 
+
+*Figure 1. Sample counts for training versus cross-validation sets. The initial training data-set is split 60/40 to allow for in-sample and out-of-sample results.*
+
 ## Analysis Model 1: Neural Network
 
 Our first analysis will utilize a neural network to attempt to model the data. By using differing numbers of neurons in the hidden layer, we can control bias and variance. The larger the number of hidden neurons, the larger the variance, and potential exists for overfitting. More neurons also increases training time. It is therefore important to limit the hidden layer size, according to the data.
@@ -148,7 +154,7 @@ plot(tuneResult)
 
 ![](predict_files/figure-html/unnamed-chunk-8-1.png) 
 
-*Figure 1. A visualization of the SVM tuning process. Darker colors indicate a better fit and are likely to result in more accurate models.*
+*Figure 2. A visualization of the SVM tuning process. Darker colors indicate a better fit and are likely to result in a more accurate model.*
 
 We can now create an SVM with the optimized settings and train our model.
 
@@ -188,7 +194,7 @@ Out-of-sample Results
 ## [1] "CV Accuracy: 0.994666319760635"
 ```
 
-The results appear to be a very good fit with an accuracy of 99% on the training set, and 98.6% on the cross-validation set. Note, the cross-validation set consists of data that was not used within the actual training of the model.
+The results appear to be a very good fit with a high accuracy for both the training and cross-validation sets. Note, the cross-validation set consists of data that was not used within the actual training of the model.
 
 We can now run the SVM model on the test set and obtain the results.
 
@@ -210,6 +216,8 @@ test$y
 ##  [1] B A B A A E D B A A B C B A E E A B B B
 ## Levels: A B C D E
 ```
+
+
 
 ## Sources
 
