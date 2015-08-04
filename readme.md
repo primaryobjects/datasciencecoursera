@@ -8,6 +8,7 @@ This repository contains projects from the Coursera - Johns Hopkins University d
 - Exploratory Data Analysis
 - Reproducible Research
 - Regression Models
+- Practical Machine Learning
 
 ## Projects
 
@@ -31,7 +32,11 @@ Project 2 - [U.S. National Oceanic and Atmospheric Administration's (NOAA) Storm
 
 #### Regression Models
 
-Project 1 - [MPG vs Automatic and Manual Transmission Analysis](https://github.com/primaryobjects/datasciencecoursera/tree/master/regmods-030)  
+Project 1 - [MPG vs Automatic and Manual Transmission Analysis](https://github.com/primaryobjects/datasciencecoursera/tree/master/regmods-030)
+
+#### Practical Machine Learning
+
+Project 1 - [Human Activity Recognition: Predicting Proper Excersie Technique](https://github.com/primaryobjects/datasciencecoursera/tree/master/predmachlearn-031)
 
 ## Author
 
