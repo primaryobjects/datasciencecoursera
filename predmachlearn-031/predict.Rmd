@@ -10,7 +10,7 @@ output:
 
 ## Synopsis
 
-This report analyzes a human activity recognition data-set, consisting of recordings from devices such as Jawbone Up, Nike FuelBand, and Fitbit self-monitoring equipment. The recordings include both proper and inproper weight-lifting routines. By analyzing an initial training set, we can predict proper versus improper weight-lifting technique with a cross-validation rating of 99.5% accuracy.
+This report analyzes a human activity recognition data-set, consisting of recordings from devices such as Jawbone Up, Nike FuelBand, and Fitbit self-monitoring equipment. The recordings include both proper and inproper weight-lifting routines. By analyzing an initial training set, we can predict proper versus improper weight-lifting technique with a cross-validation rating of 99% accuracy.
 
 ## Data Processing
 
@@ -112,20 +112,36 @@ Our first analysis will utilize a neural network to attempt to model the data. B
 
 Our neural network consists of 52 input nodes, one for each usable column in the training set, and 5 output nodes. The output nodes dictate the classification (the node with the highest value relates the classification).
 
-```{r}
+We can initially run the neural network on a subset of training data, in order to speed up training time while searching for optimal parameters.
+
+```{r cache=TRUE, message=FALSE, results='hide' }
 # Analysis 1: Create neural network model on training set.
-#mod1 <- nnet(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = training, maxit = 10000, size = 12)
+mod1 <- nnet(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = head(training, 1000), maxit = 10000, size = 8, decay = .5)
 
 # Predict results of nnet on training.
-#training$y1 <- predict(mod1, training, type='class')
-#trainError <- sum(training$classe != training$y1) / nrow(training)
-#trainAccuracy <- 1 - trainError
+y <- predict(mod1, training, type='class')
+trainError <- sum(training$classe != y) / nrow(training)
+trainAccuracy <- 1 - trainError
 
 # Predict results of nnet on cv.
-#cv$y1 <- predict(mod1, cv, type='class')
-#cvError <- sum(cv$classe != cv$y1) / nrow(cv)
-#cvAccuracy <- 1 - cvError
+y <- predict(mod1, cv, type='class')
+cvError <- sum(cv$classe != y) / nrow(cv)
+cvAccuracy <- 1 - cvError
 ```
+
+In-sample Results
+```{r, echo=FALSE}
+print(paste('Training Error:', trainError))
+print(paste('Training Accuracy:', trainAccuracy))
+```
+
+Out-of-sample Results
+```{r, echo=FALSE}
+print(paste('CV Error:', cvError))
+print(paste('CV Accuracy:', cvAccuracy))
+```
+
+Neural networks can take a considerable amount of time to train in order to obtain a high accuracy. However, they have the potential to fit a higher degree of complexity. Note, the training accuracy suffers from high bias and likely requires further fine-tuning of the parameters. We'll move on to an analysis based upon a support vector machine.
 
 ## Analysis Model 2: Support Vector Machine (SVM)
 
@@ -163,13 +179,13 @@ We can now create an SVM with the optimized settings and train our model.
 mod2 <- svm(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, training, cost = cost, gamma = gamma)
 
 # Predict results of svm on training.
-training$y2 <- predict(mod2, training)
-trainError <- sum(training$classe != training$y2) / nrow(training)
+y <- predict(mod2, training)
+trainError <- sum(training$classe != y) / nrow(training)
 trainAccuracy <- 1 - trainError
 
 # Predict results of svm on cv.
-cv$y2 <- predict(mod2, cv)
-cvError <- sum(cv$classe != cv$y2) / nrow(cv)
+y <- predict(mod2, cv)
+cvError <- sum(cv$classe != y) / nrow(cv)
 cvAccuracy <- 1 - cvError
 ```
 

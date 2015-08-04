@@ -71,7 +71,7 @@ img {
 </div>
 <div id="synopsis" class="section level2">
 <h2>Synopsis</h2>
-<p>This report analyzes a human activity recognition data-set, consisting of recordings from devices such as Jawbone Up, Nike FuelBand, and Fitbit self-monitoring equipment. The recordings include both proper and inproper weight-lifting routines. By analyzing an initial training set, we can predict proper versus improper weight-lifting technique with a cross-validation rating of 99.5% accuracy.</p>
+<p>This report analyzes a human activity recognition data-set, consisting of recordings from devices such as Jawbone Up, Nike FuelBand, and Fitbit self-monitoring equipment. The recordings include both proper and inproper weight-lifting routines. By analyzing an initial training set, we can predict proper versus improper weight-lifting technique with a cross-validation rating of 99% accuracy.</p>
 </div>
 <div id="data-processing" class="section level2">
 <h2>Data Processing</h2>
@@ -140,18 +140,26 @@ cv &lt;- t[[2]]</code></pre>
 <h2>Analysis Model 1: Neural Network</h2>
 <p>Our first analysis will utilize a neural network to attempt to model the data. By using differing numbers of neurons in the hidden layer, we can control bias and variance. The larger the number of hidden neurons, the larger the variance, and potential exists for overfitting. More neurons also increases training time. It is therefore important to limit the hidden layer size, according to the data.</p>
 <p>Our neural network consists of 52 input nodes, one for each usable column in the training set, and 5 output nodes. The output nodes dictate the classification (the node with the highest value relates the classification).</p>
+<p>We can initially run the neural network on a subset of training data, in order to speed up training time while searching for optimal parameters.</p>
 <pre class="r"><code># Analysis 1: Create neural network model on training set.
-#mod1 &lt;- nnet(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = training, maxit = 10000, size = 12)
+mod1 &lt;- nnet(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, data = head(training, 1000), maxit = 10000, size = 8, decay = .5)
 
 # Predict results of nnet on training.
-#training$y1 &lt;- predict(mod1, training, type='class')
-#trainError &lt;- sum(training$classe != training$y1) / nrow(training)
-#trainAccuracy &lt;- 1 - trainError
+y &lt;- predict(mod1, training, type='class')
+trainError &lt;- sum(training$classe != y) / nrow(training)
+trainAccuracy &lt;- 1 - trainError
 
 # Predict results of nnet on cv.
-#cv$y1 &lt;- predict(mod1, cv, type='class')
-#cvError &lt;- sum(cv$classe != cv$y1) / nrow(cv)
-#cvAccuracy &lt;- 1 - cvError</code></pre>
+y &lt;- predict(mod1, cv, type='class')
+cvError &lt;- sum(cv$classe != y) / nrow(cv)
+cvAccuracy &lt;- 1 - cvError</code></pre>
+<p>In-sample Results</p>
+<pre><code>## [1] &quot;Training Error: 0.296296296296296&quot;</code></pre>
+<pre><code>## [1] &quot;Training Accuracy: 0.703703703703704&quot;</code></pre>
+<p>Out-of-sample Results</p>
+<pre><code>## [1] &quot;CV Error: 0.313256146741251&quot;</code></pre>
+<pre><code>## [1] &quot;CV Accuracy: 0.686743853258749&quot;</code></pre>
+<p>Neural networks can take a considerable amount of time to train in order to obtain a high accuracy. However, they have the potential to fit a higher degree of complexity. Note, the training accuracy suffers from high bias and likely requires further fine-tuning of the parameters. We’ll move on to an analysis based upon a support vector machine.</p>
 </div>
 <div id="analysis-model-2-support-vector-machine-svm" class="section level2">
 <h2>Analysis Model 2: Support Vector Machine (SVM)</h2>
@@ -175,13 +183,13 @@ gamma &lt;- tuneResult$best.model$gamma</code></pre>
 mod2 &lt;- svm(classe ~ . - num_window - cvtd_timestamp - raw_timestamp_part_1 - raw_timestamp_part_2 - user_name - X, training, cost = cost, gamma = gamma)
 
 # Predict results of svm on training.
-training$y2 &lt;- predict(mod2, training)
-trainError &lt;- sum(training$classe != training$y2) / nrow(training)
+y &lt;- predict(mod2, training)
+trainError &lt;- sum(training$classe != y) / nrow(training)
 trainAccuracy &lt;- 1 - trainError
 
 # Predict results of svm on cv.
-cv$y2 &lt;- predict(mod2, cv)
-cvError &lt;- sum(cv$classe != cv$y2) / nrow(cv)
+y &lt;- predict(mod2, cv)
+cvError &lt;- sum(cv$classe != y) / nrow(cv)
 cvAccuracy &lt;- 1 - cvError</code></pre>
 <p>In-sample Results</p>
 <pre><code>## [1] &quot;Training Error: 0.00199496920808396&quot;</code></pre>
