@@ -1,4 +1,4 @@
-# Human Activity Recognition: Predicting Proper Excersie Technique
+# Human Activity Recognition: Predicting Proper Exercise Technique
 August 15, 2015  
 
 #### Kory Becker - August 15, 2015

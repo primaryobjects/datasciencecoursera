@@ -1,5 +1,5 @@
 ---
-title: "Human Activity Recognition: Predicting Proper Excersie Technique"
+title: "Human Activity Recognition: Predicting Proper Exercise Technique"
 date: "August 15, 2015"
 output:
   html_document:
