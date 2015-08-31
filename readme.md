@@ -36,7 +36,7 @@ Project 1 - [MPG vs Automatic and Manual Transmission Analysis](https://github.c
 
 #### Practical Machine Learning
 
-Project 1 - [Human Activity Recognition: Predicting Proper Excersie Technique](https://github.com/primaryobjects/datasciencecoursera/tree/master/predmachlearn-031)
+Project 1 - [Human Activity Recognition: Predicting Proper Exercise Technique](https://github.com/primaryobjects/datasciencecoursera/tree/master/predmachlearn-031)
 
 ## Author
 
